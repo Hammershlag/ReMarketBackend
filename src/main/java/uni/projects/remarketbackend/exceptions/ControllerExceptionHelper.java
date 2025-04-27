@@ -19,6 +19,11 @@ public class ControllerExceptionHelper {
 
     private static final Logger log = LoggerFactory.getLogger(ControllerExceptionHelper.class);
 
+    /**
+     * Use when the user is not authenticated
+     * @param e
+     * @return
+     */
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public ResponseEntity<ExceptionDetails> handleAuthenticationException(AuthenticationException e) {
@@ -26,6 +31,11 @@ public class ControllerExceptionHelper {
         return ResponseEntity.status(406).body(new ExceptionDetails(HttpStatus.NOT_ACCEPTABLE, e.getMessage()));
     }
 
+    /**
+     * Use when the JWT token is not valid or expired
+     * @param e
+     * @return
+     */
     @ExceptionHandler(JwtTokenException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<ExceptionDetails> handleJwtTokenException(JwtTokenException e) {
@@ -34,6 +44,11 @@ public class ControllerExceptionHelper {
     }
 
 
+    /**
+     * Use when the server is not able to process the request and other exceptions are not suitable
+     * @param e
+     * @return
+     */
     @ExceptionHandler(CustomException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ExceptionDetails> handleCustomException(CustomException e) {
@@ -41,11 +56,29 @@ public class ControllerExceptionHelper {
         return ResponseEntity.status(500).body(new ExceptionDetails(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()));
     }
 
+    /**
+     * Use when the data sent by the client is in wrong format or not valid
+     * @param e
+     * @return
+     */
     @ExceptionHandler(ClientException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ExceptionDetails> handleClientException(ClientException e) {
         //log.error("Client exception: " + e.getMessage());
         return ResponseEntity.status(400).body(new ExceptionDetails(HttpStatus.BAD_REQUEST, e.getMessage()));
+    }
+
+
+    /**
+     * Use when the resource is not found
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ExceptionDetails> handleNotFoundException(NotFoundException e) {
+        //log.error("Not found exception: " + e.getMessage());
+        return ResponseEntity.status(404).body(new ExceptionDetails(HttpStatus.NOT_FOUND, e.getMessage()));
     }
 
 }

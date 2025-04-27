@@ -18,6 +18,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import uni.projects.remarketbackend.config.jwt.JwtAuthenticationEntryPoint;
 import uni.projects.remarketbackend.config.jwt.JwtAuthenticationFilter;
 
+import java.util.logging.Logger;
+
 
 /**
  * @author Tomasz Zbroszczyk
@@ -52,8 +54,9 @@ public class SecurityConfig {
                     authorize.requestMatchers("/v3/api-docs").permitAll();
                     authorize.requestMatchers("/swagger-ui.html").permitAll();
 
-                    authorize.requestMatchers("/actuator/**").hasRole("ADMIN");
                     authorize.requestMatchers("/api/auth/**").permitAll();
+
+                    authorize.requestMatchers("/actuator/**").hasRole("ADMIN");
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     authorize.anyRequest().authenticated();
                 })                .cors(Customizer.withDefaults()) // Enable CORS

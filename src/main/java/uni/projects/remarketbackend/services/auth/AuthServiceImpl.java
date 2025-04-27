@@ -13,8 +13,8 @@ import uni.projects.remarketbackend.dto.auth.JwtAuthResponse;
 import uni.projects.remarketbackend.dto.auth.LoginDto;
 import uni.projects.remarketbackend.exceptions.exceptions.AuthenticationException;
 import uni.projects.remarketbackend.exceptions.exceptions.JwtTokenException;
-import uni.projects.remarketbackend.models.Account;
-import uni.projects.remarketbackend.models.Status;
+import uni.projects.remarketbackend.models.account.Account;
+import uni.projects.remarketbackend.models.account.Status;
 
 import javax.security.auth.login.LoginException;
 import java.time.LocalDateTime;

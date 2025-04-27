@@ -3,8 +3,8 @@ package uni.projects.remarketbackend.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uni.projects.remarketbackend.models.Account;
-import uni.projects.remarketbackend.models.Roles;
+import uni.projects.remarketbackend.models.account.Account;
+import uni.projects.remarketbackend.models.account.Roles;
 
 /**
  * @author Tomasz Zbroszczyk
@@ -22,8 +22,8 @@ public class AccountDto {
     private String email;
     private String role;
 
-    public static AccountDto fromAccount(AccountDto account) {
-        return new AccountDto(account.getUsername(), account.getPassword(), account.getEmail(), account.getRole());
+    public static AccountDto fromAccount(Account account) {
+        return new AccountDto(account.getUsername(), "********", account.getEmail(), account.getRole().name());
     }
 
     public Account toAccount() {

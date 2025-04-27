@@ -10,9 +10,11 @@ import uni.projects.remarketbackend.config.jwt.JwtTokenProvider;
 import uni.projects.remarketbackend.dao.AccountRepository;
 import uni.projects.remarketbackend.dto.AccountDto;
 import uni.projects.remarketbackend.exceptions.exceptions.AuthenticationException;
-import uni.projects.remarketbackend.models.Account;
-import uni.projects.remarketbackend.models.Roles;
-import uni.projects.remarketbackend.models.Status;
+import uni.projects.remarketbackend.models.account.Account;
+import uni.projects.remarketbackend.models.account.Roles;
+import uni.projects.remarketbackend.models.account.Status;
+import uni.projects.remarketbackend.utils.dataVerification.DataVerification;
+import uni.projects.remarketbackend.utils.dataVerification.NormalDataVerification;
 
 import java.time.LocalDateTime;
 
@@ -34,6 +36,8 @@ public class AccountService {
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    private DataVerification dataVerification = new NormalDataVerification();
 
     public AccountService(AccountRepository userRepository, PasswordEncoder passwordEncoder) {
         this.accountRepository = userRepository;
@@ -63,8 +67,8 @@ public class AccountService {
 
     private boolean verifyUser(Account account) throws AuthenticationException {
 
-//        if (!dataVerification.verifyUser(account))
-//            throw new AuthenticationException("Invalid user data");
+        if (!dataVerification.verifyUser(account))
+            throw new AuthenticationException("Invalid user data");
 
         if (account.getId() != null){
             if (accountRepository.existsByUsernameAndIdNot(account.getUsername(), account.getId()))
@@ -90,7 +94,7 @@ public class AccountService {
         return accountRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail).orElse(null);
     }
 
-    public Account updateAccount(Account account, AccountDto accountDto, String oldPassword) throws Exception {
+    public Account updateAccount(Account account, AccountDto accountDto) throws Exception {
 
         if (accountDto.getUsername() != null) {
             account.setUsername(accountDto.getUsername());
@@ -131,5 +135,17 @@ public class AccountService {
 
     public boolean checkPassword(Account account, String password) {
         return passwordEncoder.matches(password, account.getPassword());
+    }
+
+    public void becomeSeller(Account account) throws AuthenticationException {
+        if (account.getRole() == Roles.SELLER) {
+            return;
+        }
+        if (account.getRole() == Roles.ADMIN || account.getRole() == Roles.STUFF) {
+            throw new AuthenticationException("You cannot downgrade your role");
+        }
+        account.setRole(Roles.SELLER);
+        account.setUpdatedAt(LocalDateTime.now());
+        accountRepository.save(account);
     }
 }

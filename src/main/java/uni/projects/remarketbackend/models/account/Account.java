@@ -1,10 +1,11 @@
-package uni.projects.remarketbackend.models;
+package uni.projects.remarketbackend.models.account;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uni.projects.remarketbackend.models.Photo;
 
 import java.time.LocalDateTime;
 
@@ -37,6 +38,10 @@ public class Account {
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Roles role;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "photo_id", referencedColumnName = "id", nullable = true)
+    private Photo photo;
 
     @Column(nullable = false, updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

@@ -1,4 +1,4 @@
-package uni.projects.remarketbackend.models;
+package uni.projects.remarketbackend.models.account;
 
 /**
  * @author Tomasz Zbroszczyk

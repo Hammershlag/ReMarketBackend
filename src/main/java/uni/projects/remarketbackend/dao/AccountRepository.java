@@ -1,7 +1,7 @@
 package uni.projects.remarketbackend.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import uni.projects.remarketbackend.models.Account;
+import uni.projects.remarketbackend.models.account.Account;
 
 import java.util.Optional;
 

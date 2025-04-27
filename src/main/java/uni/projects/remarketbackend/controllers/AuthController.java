@@ -20,7 +20,7 @@ import uni.projects.remarketbackend.dto.auth.JwtAuthResponse;
 import uni.projects.remarketbackend.dto.auth.LoginDto;
 import uni.projects.remarketbackend.dto.auth.RefreshTokenRequest;
 import uni.projects.remarketbackend.exceptions.exceptions.AuthenticationException;
-import uni.projects.remarketbackend.models.Account;
+import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.services.AccountService;
 import uni.projects.remarketbackend.services.auth.AuthService;
 
