@@ -83,4 +83,18 @@ public class ListingController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/{id}/shopping-cart")
+    @Transactional
+    public ResponseEntity<Void> addToShoppingCart(HttpServletRequest request, @PathVariable Long id) {
+        listingService.addToShoppingCart(request, id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}/shopping-cart")
+    @Transactional
+    public ResponseEntity<Void> removeFromShoppingCart(HttpServletRequest request, @PathVariable Long id) {
+        listingService.removeFromShoppingCart(request, id);
+        return ResponseEntity.ok().build();
+    }
+
 }
