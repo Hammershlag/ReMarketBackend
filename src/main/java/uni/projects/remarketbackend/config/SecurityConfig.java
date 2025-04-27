@@ -47,7 +47,6 @@ public class SecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> {
-
                     // Allow all Swagger & OpenAPI-related URLs
                     authorize.requestMatchers("/swagger-ui/**").permitAll();
                     authorize.requestMatchers("/v3/api-docs/**").permitAll();
@@ -55,6 +54,12 @@ public class SecurityConfig {
                     authorize.requestMatchers("/swagger-ui.html").permitAll();
 
                     authorize.requestMatchers("/api/auth/**").permitAll();
+                    authorize.requestMatchers("/api/accounts").authenticated();
+                    authorize.requestMatchers("/api/photo/user").authenticated();
+                    authorize.requestMatchers(HttpMethod.GET, "/api/listing").permitAll();
+                    authorize.requestMatchers("/api/listing").hasAnyRole("SELLER", "ADMIN", "STUFF");
+                    authorize.requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll();
+                    authorize.requestMatchers("/api/categories/**").hasAnyRole("SELLER", "ADMIN", "STUFF");
 
                     authorize.requestMatchers("/actuator/**").hasRole("ADMIN");
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();

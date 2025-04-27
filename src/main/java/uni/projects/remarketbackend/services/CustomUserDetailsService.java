@@ -30,7 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not exists by Username or Email"));
 
         // Pobierz pojedynczą rolę użytkownika
-        GrantedAuthority authority = new SimpleGrantedAuthority(account.getRole().name());
+        GrantedAuthority authority = new SimpleGrantedAuthority(account.getRole().getRole());
 
         return new org.springframework.security.core.userdetails.User(
                 usernameOrEmail,

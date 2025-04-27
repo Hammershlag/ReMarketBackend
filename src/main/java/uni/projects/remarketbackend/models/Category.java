@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uni.projects.remarketbackend.models.account.Account;
 
 /**
  * @author Tomasz Zbroszczyk
@@ -13,21 +12,17 @@ import uni.projects.remarketbackend.models.account.Account;
  */
 
 @Entity
-@Table(name = "photos")
+@Table(name = "categories")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class Photo {
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
-    @Column(nullable = false)
-    private byte[] data;
+    @Column(nullable = false, unique = true)
+    private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "uploader_id", nullable = false)
-    private Account uploader;
 }

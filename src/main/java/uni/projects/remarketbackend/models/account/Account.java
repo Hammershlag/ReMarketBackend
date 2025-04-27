@@ -39,7 +39,7 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private Roles role;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "photo_id", referencedColumnName = "id", nullable = true)
     private Photo photo;
 

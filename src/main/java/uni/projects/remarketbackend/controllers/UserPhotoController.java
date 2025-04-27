@@ -1,6 +1,7 @@
 package uni.projects.remarketbackend.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ import uni.projects.remarketbackend.services.UserPhotoService;
  */
 
 @RestController
-@RequestMapping("/api/user/photo")
+@RequestMapping("/api/photo/user")
 public class UserPhotoController {
 
     @Autowired
@@ -28,6 +29,7 @@ public class UserPhotoController {
 
     @PostMapping()
     @SneakyThrows
+    @Transactional
     public ResponseEntity<PhotoDto> uploadPhoto(HttpServletRequest request, @RequestBody MultipartFile photo) {
         Account account = accountService.getAccount(request);
         PhotoDto photoDto = userPhotoService.uploadPhoto(photo, account);
@@ -36,6 +38,7 @@ public class UserPhotoController {
     }
 
     @GetMapping()
+    @Transactional
     public ResponseEntity<PhotoDto> getPhoto(HttpServletRequest request) {
         Account account = accountService.getAccount(request);
         PhotoDto photoDto = userPhotoService.getPhoto(account);
@@ -44,6 +47,7 @@ public class UserPhotoController {
     }
 
     @DeleteMapping()
+    @Transactional
     public ResponseEntity<Void> deletePhoto(HttpServletRequest request) {
         Account account = accountService.getAccount(request);
         userPhotoService.deletePhoto(account);
@@ -53,6 +57,7 @@ public class UserPhotoController {
 
     @PutMapping()
     @SneakyThrows
+    @Transactional
     public ResponseEntity<PhotoDto> updatePhoto(HttpServletRequest request, @RequestBody MultipartFile photo) {
         Account account = accountService.getAccount(request);
         PhotoDto photoDto = userPhotoService.updatePhoto(photo, account);
