@@ -10,6 +10,7 @@ import uni.projects.remarketbackend.config.jwt.JwtTokenProvider;
 import uni.projects.remarketbackend.dao.AccountRepository;
 import uni.projects.remarketbackend.dto.AccountDto;
 import uni.projects.remarketbackend.exceptions.exceptions.AuthenticationException;
+import uni.projects.remarketbackend.models.Photo;
 import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.models.account.Roles;
 import uni.projects.remarketbackend.models.account.Status;
@@ -91,7 +92,12 @@ public class AccountService {
     public Account getAccount(HttpServletRequest request) {
         String token = jwtAuthenticationFilter.getTokenFromRequest(request);
         String usernameOrEmail = jwtTokenProvider.getUsername(token);
-        return accountRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail).orElse(null);
+        Account account = accountRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail).orElse(null);
+        Photo photo = account.getPhoto();
+        if (photo != null) {
+            photo.setUploader(null);
+        }
+        return account;
     }
 
     public Account updateAccount(Account account, AccountDto accountDto) throws Exception {

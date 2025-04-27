@@ -1,6 +1,7 @@
 package uni.projects.remarketbackend.services;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,12 +13,12 @@ import uni.projects.remarketbackend.dao.PhotoRepository;
 import uni.projects.remarketbackend.dto.ListingDto;
 import uni.projects.remarketbackend.dto.PhotoDto;
 import uni.projects.remarketbackend.models.Category;
+import uni.projects.remarketbackend.models.Photo;
 import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.models.listing.Listing;
 import uni.projects.remarketbackend.models.listing.ListingStatus;
 
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -73,17 +74,33 @@ public class ListingService {
         return listingRepository.findAll(spec, PageRequest.of(page - 1, pageSize, sorting)).map(ListingDto::valueFrom);
     }
 
+    @Transactional
     public ListingDto createListing(HttpServletRequest request, ListingDto listingDto) {
         Account account = accountService.getAccount(request);
         Listing listing = new Listing();
         listing.setTitle(listingDto.getTitle());
         listing.setDescription(listingDto.getDescription());
         listing.setPrice(listingDto.getPrice());
-        listing.setPhotos(new HashSet<>(photoRepository.findAllById(
+
+        List<Photo> photos = new ArrayList<>(
+                photoRepository.findAllById(
                 listingDto.getPhotos().stream()
                         .map(PhotoDto::getId)
-                        .collect(Collectors.toList()))
+                        .collect(Collectors.toList())
         ));
+
+//        List<Photo> photos = new ArrayList<>();
+//        for (PhotoDto photoDto : listingDto.getPhotos()) {
+//            Long photoId = photoDto.getId();
+//            Photo photo = photoRepository.findById(photoId)
+//                    .orElseThrow(() -> new RuntimeException("Photo with ID " + photoId + " not found"));
+//
+//            System.out.println("Photo: " + photo.getId() + " " + photo.getUploader().getUsername());
+//            photos.add(photo);
+//        }
+
+        listing.setPhotos(photos);
+
         listing.setSeller(account);
         listing.setStatus(ListingStatus.ACTIVE);
         Category category = categoryService.getById(listingDto.getCategoryId());
@@ -102,7 +119,7 @@ public class ListingService {
         existingListing.setTitle(listing.getTitle());
         existingListing.setDescription(listing.getDescription());
         existingListing.setPrice(listing.getPrice());
-        existingListing.setPhotos(new HashSet<>(photoRepository.findAllById(
+        existingListing.setPhotos(new ArrayList<>(photoRepository.findAllById(
                 listing.getPhotos().stream()
                         .map(PhotoDto::getId)
                         .collect(Collectors.toList()))

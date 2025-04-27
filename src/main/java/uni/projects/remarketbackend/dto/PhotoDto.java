@@ -41,8 +41,8 @@ public class PhotoDto {
     public static PhotoDto onlyId(Photo photo) {
         return new PhotoDto(
                 photo.getId(),
-                null,
-                null
+                "",
+                photo.getUploader().getUsername()
         );
     }
 
@@ -50,9 +50,7 @@ public class PhotoDto {
         Photo photo = new Photo();
         photo.setId(getId() != null ? getId().longValue() : null);
         photo.setData(Base64.getDecoder().decode(getData())); // Decode from Base64
-        Account account = new Account();
-        account.setUsername(getUploader());
-        photo.setUploader(account);
+        photo.setUploader(null);
         return photo;
     }
 }

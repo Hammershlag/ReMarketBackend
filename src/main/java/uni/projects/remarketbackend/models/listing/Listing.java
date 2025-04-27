@@ -8,7 +8,9 @@ import uni.projects.remarketbackend.models.Category;
 import uni.projects.remarketbackend.models.Photo;
 import uni.projects.remarketbackend.models.account.Account;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -41,13 +43,13 @@ public class Listing {
     @Enumerated(EnumType.STRING)
     private ListingStatus status;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "listing_photos",
             joinColumns = @JoinColumn(name = "listing_id"),
             inverseJoinColumns = @JoinColumn(name = "photo_id")
     )
-    private Set<Photo> photos = new HashSet<>();
+    private List<Photo> photos = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "seller_id", nullable = false)

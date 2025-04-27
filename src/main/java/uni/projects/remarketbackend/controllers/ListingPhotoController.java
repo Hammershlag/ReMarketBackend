@@ -5,15 +5,14 @@ import jakarta.transaction.Transactional;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import uni.projects.remarketbackend.dto.PhotoDto;
 import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.services.AccountService;
 import uni.projects.remarketbackend.services.ListingPhotoService;
+
+import java.util.List;
 
 /**
  * @author Tomasz Zbroszczyk
@@ -41,5 +40,22 @@ public class ListingPhotoController {
 
         return ResponseEntity.ok(photoDto.getId());
     }
+
+    @GetMapping("/{id}")
+    @SneakyThrows
+    @Transactional
+    public ResponseEntity<PhotoDto> getPhoto(@PathVariable Long id) {
+        PhotoDto photo = listingPhotoService.getPhoto(id);
+        return ResponseEntity.ok(photo);
+    }
+
+    @GetMapping("/listing/{listingId}")
+    @SneakyThrows
+    @Transactional
+    public ResponseEntity<List<PhotoDto>> getListingPhotos(@PathVariable Long listingId) {
+        List<PhotoDto> photos = listingPhotoService.getListingPhotos(listingId);
+        return ResponseEntity.ok(photos);
+    }
+
 
 }

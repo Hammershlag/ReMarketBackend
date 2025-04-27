@@ -1,6 +1,7 @@
 package uni.projects.remarketbackend.models.account;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -41,6 +42,7 @@ public class Account {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "photo_id", referencedColumnName = "id", nullable = true)
+    @JsonIgnore
     private Photo photo;
 
     @Column(nullable = false, updatable = false)

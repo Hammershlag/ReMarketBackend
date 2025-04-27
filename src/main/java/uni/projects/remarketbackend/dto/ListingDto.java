@@ -7,6 +7,7 @@ import uni.projects.remarketbackend.models.Category;
 import uni.projects.remarketbackend.models.listing.Listing;
 import uni.projects.remarketbackend.models.listing.ListingStatus;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,7 +25,7 @@ public class ListingDto {
     private String title;
     private String description;;
     private double price;
-    private Set<PhotoDto> photos;
+    private List<PhotoDto> photos;
     private String sellerUsername;
     private String status;
     private Long categoryId;
@@ -34,7 +35,7 @@ public class ListingDto {
                 listing.getTitle(),
                 listing.getDescription(),
                 listing.getPrice(),
-                listing.getPhotos().stream().map(PhotoDto::onlyId).collect(Collectors.toSet()),
+                listing.getPhotos().stream().map(PhotoDto::onlyId).collect(Collectors.toList()),
                 listing.getSeller().getUsername(),
                 listing.getStatus().name(),
                 listing.getCategory().getId()
@@ -46,7 +47,7 @@ public class ListingDto {
         listing.setTitle(this.getTitle());
         listing.setDescription(this.getDescription());
         listing.setPrice(this.getPrice());
-        listing.setPhotos(this.getPhotos().stream().map(PhotoDto::convertTo).collect(Collectors.toSet()));
+        listing.setPhotos(this.getPhotos().stream().map(PhotoDto::convertTo).collect(Collectors.toList()));
         listing.setStatus(ListingStatus.ACTIVE);
         Category category = new Category();
         category.setId(this.getCategoryId());

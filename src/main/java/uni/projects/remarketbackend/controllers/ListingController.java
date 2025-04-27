@@ -46,7 +46,8 @@ public class ListingController {
     @PostMapping
     @Transactional
     public ResponseEntity<ListingDto> createListing(HttpServletRequest request, @RequestBody ListingDto listing) {
-        return ResponseEntity.ok(listingService.createListing(request, listing));
+        ListingDto createdListing = listingService.createListing(request, listing);
+        return createdListing != null ? ResponseEntity.ok(createdListing) : ResponseEntity.badRequest().build();
     }
 
     @PutMapping("/{id}")
