@@ -110,7 +110,7 @@ public class ListingService {
 
         listing.setSeller(account);
         listing.setStatus(ListingStatus.ACTIVE);
-        Category category = categoryService.getById(listingDto.getCategoryId());
+        Category category = categoryService.getById(listingDto.getCategory().getId());
         listing.setCategory(category);
         Listing savedListing = listingRepository.save(listing);
         return ListingDto.valueFrom(savedListing);
@@ -131,7 +131,7 @@ public class ListingService {
                         .map(PhotoDto::getId)
                         .collect(Collectors.toList()))
         ));
-        Category category = categoryService.getById(listing.getCategoryId());
+        Category category = categoryService.getById(listing.getCategory().getId());
         existingListing.setCategory(category);
         Listing savedListing = listingRepository.save(existingListing);
         return ListingDto.valueFrom(savedListing);

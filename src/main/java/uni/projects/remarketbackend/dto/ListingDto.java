@@ -29,7 +29,7 @@ public class ListingDto {
     private List<PhotoDto> photos;
     private String sellerUsername;
     private String status;
-    private Long categoryId;
+    private CategoryDto category;
 
     public static ListingDto valueFrom(Listing listing) {
         return new ListingDto(
@@ -40,7 +40,7 @@ public class ListingDto {
                 listing.getPhotos().stream().map(PhotoDto::onlyId).collect(Collectors.toList()),
                 listing.getSeller().getUsername(),
                 listing.getStatus().name(),
-                listing.getCategory().getId()
+                CategoryDto.valueFrom(listing.getCategory())
         );
     }
 
@@ -52,10 +52,7 @@ public class ListingDto {
         listing.setPrice(this.getPrice());
         listing.setPhotos(this.getPhotos().stream().map(PhotoDto::convertTo).collect(Collectors.toList()));
         listing.setStatus(ListingStatus.ACTIVE);
-        Category category = new Category();
-        category.setId(this.getCategoryId());
-        listing.setCategory(category);
-        // Seller should be set separately in the service layer
+        listing.setCategory(this.category.convertTo());
         return listing;
     }
 }
