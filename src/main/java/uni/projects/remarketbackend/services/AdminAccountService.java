@@ -1,11 +1,14 @@
 package uni.projects.remarketbackend.services;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uni.projects.remarketbackend.dao.AccountRepository;
 import uni.projects.remarketbackend.dto.AccountDto;
+import uni.projects.remarketbackend.models.account.Account;
+import uni.projects.remarketbackend.models.account.Status;
 
 /**
  * @author Tomasz Zbroszczyk
@@ -22,5 +25,12 @@ public class AdminAccountService {
     public Page<AccountDto> getAllAccounts(Pageable pageable) {
         return accountRepository.findAll(pageable)
                 .map(AccountDto::fromAccount);
+    }
+
+    public void blockAccount(Long id, HttpServletRequest request) {
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+        account.setStatus(Status.DISABLED);
+        accountRepository.save(account);
     }
 }

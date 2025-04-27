@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import uni.projects.remarketbackend.models.Photo;
+import uni.projects.remarketbackend.models.Wishlist;
 
 import java.time.LocalDateTime;
 
@@ -44,6 +45,10 @@ public class Account {
     @JoinColumn(name = "photo_id", referencedColumnName = "id", nullable = true)
     @JsonIgnore
     private Photo photo;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "wishlist_id", referencedColumnName = "id", nullable = true)
+    private Wishlist wishlist;
 
     @Column(nullable = false, updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

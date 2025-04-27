@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class ListingDto {
 
+    private Long id;
     private String title;
     private String description;;
     private double price;
@@ -32,6 +33,7 @@ public class ListingDto {
 
     public static ListingDto valueFrom(Listing listing) {
         return new ListingDto(
+                listing.getId(),
                 listing.getTitle(),
                 listing.getDescription(),
                 listing.getPrice(),
@@ -44,6 +46,7 @@ public class ListingDto {
 
     public Listing convertTo() {
         Listing listing = new Listing();
+        listing.setId(this.getId());
         listing.setTitle(this.getTitle());
         listing.setDescription(this.getDescription());
         listing.setPrice(this.getPrice());

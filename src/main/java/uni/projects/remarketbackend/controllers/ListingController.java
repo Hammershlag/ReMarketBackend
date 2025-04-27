@@ -69,4 +69,18 @@ public class ListingController {
         return ResponseEntity.ok(listingService.getListing(id));
     }
 
+    @PostMapping("/{id}/wishlist")
+    @Transactional
+    public ResponseEntity<Void> addToWishlist(HttpServletRequest request, @PathVariable Long id) {
+        listingService.addToWishlist(request, id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}/wishlist")
+    @Transactional
+    public ResponseEntity<Void> removeFromWishlist(HttpServletRequest request, @PathVariable Long id) {
+        listingService.removeFromWishlist(request, id);
+        return ResponseEntity.ok().build();
+    }
+
 }

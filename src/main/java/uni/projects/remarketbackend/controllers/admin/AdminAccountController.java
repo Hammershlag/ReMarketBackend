@@ -1,12 +1,11 @@
 package uni.projects.remarketbackend.controllers.admin;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uni.projects.remarketbackend.dto.AccountDto;
 import uni.projects.remarketbackend.services.AdminAccountService;
 
@@ -29,6 +28,12 @@ public class AdminAccountController {
     public ResponseEntity<Page<AccountDto>> getAllAccounts(Pageable pageable) {
         Page<AccountDto> accounts = adminUserService.getAllAccounts(pageable);
         return ResponseEntity.ok(accounts);
+    }
+
+    @PutMapping("/{id}/block")
+    public ResponseEntity<Void> blockAccount(HttpServletRequest request, @PathVariable Long id) {
+        adminUserService.blockAccount(id, request);
+        return ResponseEntity.noContent().build();
     }
 
 }

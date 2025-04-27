@@ -8,12 +8,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import uni.projects.remarketbackend.dao.AccountRepository;
 import uni.projects.remarketbackend.dao.ListingRepository;
 import uni.projects.remarketbackend.dao.PhotoRepository;
+import uni.projects.remarketbackend.dao.WishlistRepository;
 import uni.projects.remarketbackend.dto.ListingDto;
 import uni.projects.remarketbackend.dto.PhotoDto;
 import uni.projects.remarketbackend.models.Category;
 import uni.projects.remarketbackend.models.Photo;
+import uni.projects.remarketbackend.models.Wishlist;
 import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.models.listing.Listing;
 import uni.projects.remarketbackend.models.listing.ListingStatus;
@@ -38,6 +41,10 @@ public class ListingService {
     private AccountService accountService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
+    private WishlistRepository wishlistRepository;
 
     public Page<ListingDto> getListings(Optional<Double> minPrice, Optional<Double> maxPrice, Optional<Integer> categoryId,
                                      Optional<String> title, Optional<String> sort, int page, int pageSize) {
@@ -145,5 +152,35 @@ public class ListingService {
         return listingRepository.findById(id)
                 .map(ListingDto::valueFrom)
                 .orElseThrow(() -> new RuntimeException("Listing not found"));
+    }
+
+    public void addToWishlist(HttpServletRequest request, Long id) {
+        Account account = accountService.getAccount(request);
+        Listing listing = listingRepository.findById(id).orElseThrow(() -> new RuntimeException("Listing not found"));
+        if (account.getWishlist() == null) {
+            Wishlist wishlist = new Wishlist();
+            wishlist.setListings(new ArrayList<>());
+            wishlistRepository.save(wishlist);
+            account.setWishlist(wishlist);
+            accountRepository.save(account);
+        }
+        if (account.getWishlist().getListings().contains(listing)) {
+            throw new RuntimeException("Listing already in wishlist");
+        }
+        account.getWishlist().getListings().add(listing);
+        accountRepository.save(account);
+    }
+
+    public void removeFromWishlist(HttpServletRequest request, Long id) {
+        Account account = accountService.getAccount(request);
+        Listing listing = listingRepository.findById(id).orElseThrow(() -> new RuntimeException("Listing not found"));
+        if (account.getWishlist() == null) {
+            throw new RuntimeException("Wishlist not found");
+        }
+        if (!account.getWishlist().getListings().contains(listing)) {
+            throw new RuntimeException("Listing not in wishlist");
+        }
+        account.getWishlist().getListings().remove(listing);
+        accountRepository.save(account);
     }
 }
