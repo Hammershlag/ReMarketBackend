@@ -61,4 +61,7 @@ public class Account {
 
     @Column(nullable = true)
     private LocalDateTime deletedAt;
+
+    @Column(nullable = true)
+    private LocalDateTime disabledAt;
 }
