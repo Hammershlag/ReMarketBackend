@@ -88,6 +88,7 @@ public class ListingService {
         listing.setTitle(listingDto.getTitle());
         listing.setDescription(listingDto.getDescription());
         listing.setPrice(listingDto.getPrice());
+        listing.setAverageRating(-1f);
 
         List<Photo> photos = new ArrayList<>(
                 photoRepository.findAllById(

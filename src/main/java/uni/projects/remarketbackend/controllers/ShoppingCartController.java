@@ -4,10 +4,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uni.projects.remarketbackend.dto.ShoppingCartDto;
+import uni.projects.remarketbackend.dto.order.OrderDto;
+import uni.projects.remarketbackend.dto.order.OrderRequest;
 import uni.projects.remarketbackend.models.ShoppingCart;
 import uni.projects.remarketbackend.services.ShoppingCartService;
 
@@ -28,6 +28,13 @@ public class ShoppingCartController {
     @Transactional
     public ResponseEntity<ShoppingCartDto> getShoppingCart(HttpServletRequest request) {
         return ResponseEntity.ok(shoppingCartService.getShoppingCart(request));
+    }
+
+    @PostMapping("/checkout")
+    @Transactional
+    public ResponseEntity<Void> checkout(HttpServletRequest request, @RequestBody OrderRequest orderRequest) {
+        shoppingCartService.checkout(request, orderRequest);
+        return ResponseEntity.ok().build();
     }
 
 }

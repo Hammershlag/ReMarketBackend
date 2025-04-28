@@ -3,11 +3,17 @@ package uni.projects.remarketbackend.services;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uni.projects.remarketbackend.dao.AccountRepository;
-import uni.projects.remarketbackend.dao.ShoppingCartRepository;
+import uni.projects.remarketbackend.dao.*;
 import uni.projects.remarketbackend.dto.ShoppingCartDto;
+import uni.projects.remarketbackend.dto.order.OrderRequest;
 import uni.projects.remarketbackend.models.ShoppingCart;
 import uni.projects.remarketbackend.models.account.Account;
+import uni.projects.remarketbackend.models.listing.Listing;
+import uni.projects.remarketbackend.models.order.Address;
+import uni.projects.remarketbackend.models.order.Order;
+import uni.projects.remarketbackend.models.order.OrderStatus;
+import uni.projects.remarketbackend.models.order.payment.Payment;
+import uni.projects.remarketbackend.models.order.payment.PaymentStatus;
 
 import java.util.ArrayList;
 
@@ -26,6 +32,12 @@ public class ShoppingCartService {
     private AccountService accountService;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private AddressRepository addressRepository;
+    @Autowired
+    private PaymentRepository paymentRepository;
+    @Autowired
+    private OrderRepository orderRepository;
 
     public ShoppingCartDto getShoppingCart(HttpServletRequest request) {
 
@@ -39,5 +51,42 @@ public class ShoppingCartService {
         }
 
         return ShoppingCartDto.valueFrom(account.getShoppingCart());
+    }
+
+    public void checkout(HttpServletRequest request, OrderRequest orderDto) {
+
+        Account account = accountService.getAccount(request);
+        ShoppingCart shoppingCart = account.getShoppingCart();
+        if (shoppingCart == null) {
+            throw new RuntimeException("Shopping cart not found");
+        }
+
+        Order order = new Order();
+
+        Address address = new Address();
+        address.setStreet(orderDto.getStreet());
+        address.setCity(orderDto.getCity());
+        address.setState(orderDto.getState());
+        address.setZipCode(orderDto.getZipCode());
+        address.setCountry(orderDto.getCountry());
+        addressRepository.save(address);
+
+        order.setAddress(address);
+        order.setShippingMethod(orderDto.getShippingMethod());
+        order.setBuyer(account);
+        order.setListings(shoppingCart.getListings());
+
+        Payment payment = new Payment();
+        payment.setTotal(shoppingCart.getListings().stream().mapToDouble(Listing::getPrice).sum());
+        payment.setPaymentMethod(orderDto.getPaymentMethod());
+        payment.setPaymentStatus(PaymentStatus.PENDING);
+        paymentRepository.save(payment);
+
+        order.setPayment(payment);
+        order.setOrderStatus(OrderStatus.SHIPPING);
+        orderRepository.save(order);
+
+        shoppingCart.setListings(new ArrayList<>());
+        shoppingCartRepository.save(shoppingCart);
     }
 }
