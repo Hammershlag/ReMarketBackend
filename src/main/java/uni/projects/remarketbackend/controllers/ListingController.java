@@ -8,10 +8,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uni.projects.remarketbackend.dto.ListingDto;
+import uni.projects.remarketbackend.dto.ReviewDto;
 import uni.projects.remarketbackend.models.listing.Listing;
 import uni.projects.remarketbackend.services.ListingService;
 
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author Tomasz Zbroszczyk
@@ -97,4 +99,30 @@ public class ListingController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/{id}/reviews")
+    @Transactional
+    public ResponseEntity<Set<ReviewDto>> getReviews(@PathVariable Long id) {
+        return ResponseEntity.ok(listingService.getReviews(id));
+    }
+
+    @PostMapping("/{id}/review")
+    @Transactional
+    public ResponseEntity<Void> addReview(HttpServletRequest request, @PathVariable Long id, @RequestBody ReviewDto review) {
+        listingService.addReview(request, id, review);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}/review/{reviewId}")
+    @Transactional
+    public ResponseEntity<Void> deleteReview(HttpServletRequest request, @PathVariable Long id, @PathVariable Long reviewId) {
+        listingService.deleteReview(request, id, reviewId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}/review/{reviewId}")
+    @Transactional
+    public ResponseEntity<Void> updateReview(HttpServletRequest request, @PathVariable Long id, @PathVariable Long reviewId, @RequestBody ReviewDto review) {
+        listingService.updateReview(request, id, reviewId, review);
+        return ResponseEntity.ok().build();
+    }
 }

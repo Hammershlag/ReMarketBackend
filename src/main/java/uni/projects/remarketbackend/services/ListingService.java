@@ -11,10 +11,8 @@ import org.springframework.stereotype.Service;
 import uni.projects.remarketbackend.dao.*;
 import uni.projects.remarketbackend.dto.ListingDto;
 import uni.projects.remarketbackend.dto.PhotoDto;
-import uni.projects.remarketbackend.models.Category;
-import uni.projects.remarketbackend.models.Photo;
-import uni.projects.remarketbackend.models.ShoppingCart;
-import uni.projects.remarketbackend.models.Wishlist;
+import uni.projects.remarketbackend.dto.ReviewDto;
+import uni.projects.remarketbackend.models.*;
 import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.models.listing.Listing;
 import uni.projects.remarketbackend.models.listing.ListingStatus;
@@ -45,6 +43,8 @@ public class ListingService {
     private WishlistRepository wishlistRepository;
     @Autowired
     private ShoppingCartRepository shoppingCartRepository;
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     public Page<ListingDto> getListings(Optional<Double> minPrice, Optional<Double> maxPrice, Optional<Integer> categoryId,
                                      Optional<String> title, Optional<String> sort, int page, int pageSize) {
@@ -216,5 +216,74 @@ public class ListingService {
         account.getShoppingCart().getListings().remove(listing);
         shoppingCartRepository.save(account.getShoppingCart());
         accountRepository.save(account);
+    }
+
+    public void addReview(HttpServletRequest request, Long id, ReviewDto reviewDto) {
+        Account account = accountService.getAccount(request);
+        Listing listing = listingRepository.findById(id).orElseThrow(() -> new RuntimeException("Listing not found"));
+        if (listing.getReviews().stream().anyMatch(r -> r.getReviewer().getId().equals(account.getId()))) {
+            throw new RuntimeException("You have already reviewed this listing");
+        }
+        Review reviewEntity = new Review();
+        reviewEntity.setRating(reviewDto.getRating());
+        reviewEntity.setTitle(reviewDto.getTitle());
+        reviewEntity.setDescription(reviewDto.getDescription());
+        reviewEntity.setReviewer(account);
+        reviewEntity.setListing(listing);
+        reviewRepository.save(reviewEntity);
+
+        listing.getReviews().add(reviewEntity);
+        listing.setAverageRating((float) listing.getReviews().stream()
+                .mapToInt(Review::getRating)
+                .average()
+                .orElse(0));
+
+        listingRepository.save(listing);
+    }
+
+    public Set<ReviewDto> getReviews(Long id) {
+
+        Listing listing = listingRepository.findById(id).orElseThrow(() -> new RuntimeException("Listing not found"));
+        return listing.getReviews().stream()
+                .map(ReviewDto::valueFrom).collect(Collectors.toSet());
+
+    }
+
+    public void deleteReview(HttpServletRequest request, Long id, Long reviewId) {
+
+        Account account = accountService.getAccount(request);
+        Listing listing = listingRepository.findById(id).orElseThrow(() -> new RuntimeException("Listing not found"));
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new RuntimeException("Review not found"));
+        if (!review.getReviewer().getId().equals(account.getId())) {
+            throw new RuntimeException("You are not the owner of this review");
+        }
+        listing.getReviews().remove(review);
+        listing.setAverageRating((float) listing.getReviews().stream()
+                .mapToInt(Review::getRating)
+                .average()
+                .orElse(0));
+        reviewRepository.delete(review);
+        listingRepository.save(listing);
+    }
+
+    public void updateReview(HttpServletRequest request, Long id, Long reviewId, ReviewDto review) {
+
+        Account account = accountService.getAccount(request);
+        Listing listing = listingRepository.findById(id).orElseThrow(() -> new RuntimeException("Listing not found"));
+        Review existingReview = reviewRepository.findById(reviewId).orElseThrow(() -> new RuntimeException("Review not found"));
+        if (!existingReview.getReviewer().getId().equals(account.getId())) {
+            throw new RuntimeException("You are not the owner of this review");
+        }
+        existingReview.setRating(review.getRating());
+        existingReview.setTitle(review.getTitle());
+        existingReview.setDescription(review.getDescription());
+        reviewRepository.save(existingReview);
+
+        listing.setAverageRating((float) listing.getReviews().stream()
+                .mapToInt(Review::getRating)
+                .average()
+                .orElse(0));
+
+        listingRepository.save(listing);
     }
 }

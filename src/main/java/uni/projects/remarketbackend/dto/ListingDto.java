@@ -30,6 +30,8 @@ public class ListingDto {
     private String sellerUsername;
     private String status;
     private CategoryDto category;
+    private Set<ReviewDto> reviews;
+    private float averageRating;
 
     public static ListingDto valueFrom(Listing listing) {
         return new ListingDto(
@@ -40,7 +42,9 @@ public class ListingDto {
                 listing.getPhotos().stream().map(PhotoDto::onlyId).collect(Collectors.toList()),
                 listing.getSeller().getUsername(),
                 listing.getStatus().name(),
-                CategoryDto.valueFrom(listing.getCategory())
+                CategoryDto.valueFrom(listing.getCategory()),
+                listing.getReviews().stream().map(ReviewDto::valueFrom).collect(Collectors.toSet()),
+                listing.getAverageRating()
         );
     }
 
@@ -53,6 +57,7 @@ public class ListingDto {
         listing.setPhotos(this.getPhotos().stream().map(PhotoDto::convertTo).collect(Collectors.toList()));
         listing.setStatus(ListingStatus.ACTIVE);
         listing.setCategory(this.category.convertTo());
+        listing.setAverageRating(this.getAverageRating());
         return listing;
     }
 }
