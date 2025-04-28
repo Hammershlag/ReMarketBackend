@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import uni.projects.remarketbackend.models.order.ShippingMethod;
+import uni.projects.remarketbackend.models.order.payment.Currency;
 import uni.projects.remarketbackend.models.order.payment.PaymentMethod;
 
 /**
@@ -27,6 +28,7 @@ public class OrderRequest {
 
     //Payment
     private PaymentMethod paymentMethod;
+    private Currency currency;
 
     //Order
     private ShippingMethod shippingMethod;

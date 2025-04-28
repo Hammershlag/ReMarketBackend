@@ -3,6 +3,7 @@ package uni.projects.remarketbackend.dto.order;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uni.projects.remarketbackend.models.order.payment.Currency;
 import uni.projects.remarketbackend.models.order.payment.Payment;
 import uni.projects.remarketbackend.models.order.payment.PaymentMethod;
 import uni.projects.remarketbackend.models.order.payment.PaymentStatus;
@@ -20,13 +21,15 @@ public class PaymentDto {
     private Double total;
     private PaymentMethod paymentMethod;
     private PaymentStatus paymentStatus;
+    private Currency currency;
 
     public static PaymentDto valueFrom(Payment payment) {
         return new PaymentDto(
                 payment.getId(),
                 payment.getTotal(),
                 payment.getPaymentMethod(),
-                payment.getPaymentStatus()
+                payment.getPaymentStatus(),
+                payment.getCurrency()
         );
     }
 
@@ -36,6 +39,7 @@ public class PaymentDto {
         payment.setTotal(this.total);
         payment.setPaymentMethod(this.paymentMethod);
         payment.setPaymentStatus(this.paymentStatus);
+        payment.setCurrency(this.currency);
         return payment;
     }
 }

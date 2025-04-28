@@ -32,4 +32,8 @@ public class Payment {
     @Column(name = "payment_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
+
+    @Column(name = "currency", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Currency currency;
 }

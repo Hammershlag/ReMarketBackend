@@ -80,6 +80,7 @@ public class ShoppingCartService {
         payment.setTotal(shoppingCart.getListings().stream().mapToDouble(Listing::getPrice).sum());
         payment.setPaymentMethod(orderDto.getPaymentMethod());
         payment.setPaymentStatus(PaymentStatus.PENDING);
+        payment.setCurrency(orderDto.getCurrency());
         paymentRepository.save(payment);
 
         order.setPayment(payment);
