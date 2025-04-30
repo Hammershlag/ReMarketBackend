@@ -1,0 +1,14 @@
+name: ReMarket-Aiven
+
+services:
+  spring-boot-app:
+    build:
+      context: ../..
+      dockerfile: ./docker/aiven/DockerfileAiven
+    image: remarket-aiven:latest
+    container_name: remarket-aiven-backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - ../../.env
+

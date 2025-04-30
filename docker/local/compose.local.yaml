@@ -1,0 +1,26 @@
+name: ReMarket-Local
+
+services:
+  postgres:
+    image: 'postgres:latest'
+    container_name: 'remarket-local-database'
+    environment:
+      - 'POSTGRES_DB=remarket'
+      - 'POSTGRES_PASSWORD=MqyTSelGTDd0bEg24NOffEM07FQt1HqC'
+      - 'POSTGRES_USER=Stitch'
+    ports:
+      - '5432:5432'
+
+  spring-boot-app:
+    build:
+      context: ../..
+      dockerfile: ./docker/local/DockerfileLocal
+    image: remarket-local:latest
+    container_name: remarket-local-backend
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    env_file:
+      - ../../.env
+

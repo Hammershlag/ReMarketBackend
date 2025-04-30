@@ -89,14 +89,11 @@ public class AccountService {
         return true;
     }
 
+    @Transactional
     public Account getAccount(HttpServletRequest request) {
         String token = jwtAuthenticationFilter.getTokenFromRequest(request);
         String usernameOrEmail = jwtTokenProvider.getUsername(token);
         Account account = accountRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail).orElse(null);
-        Photo photo = account.getPhoto();
-        if (photo != null) {
-            photo.setUploader(null);
-        }
         return account;
     }
 

@@ -1,13 +1,12 @@
-name: ReMarket
+name: ReMarket-Local
 
 services:
   postgres:
     image: 'postgres:latest'
-    container_name: 'remarket-database'
+    container_name: 'remarket-local-database'
     environment:
-      - 'POSTGRES_DB=remarket_dev'
+      - 'POSTGRES_DB=remarket'
       - 'POSTGRES_PASSWORD=MqyTSelGTDd0bEg24NOffEM07FQt1HqC'
       - 'POSTGRES_USER=Stitch'
     ports:
       - '5432:5432'
-
