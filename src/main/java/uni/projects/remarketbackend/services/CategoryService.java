@@ -1,9 +1,11 @@
 package uni.projects.remarketbackend.services;
 
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uni.projects.remarketbackend.dao.CategoryRepository;
 import uni.projects.remarketbackend.dto.CategoryDto;
+import uni.projects.remarketbackend.exceptions.exceptions.ClientException;
 import uni.projects.remarketbackend.models.Category;
 
 import java.util.List;
@@ -20,11 +22,12 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @SneakyThrows
     public CategoryDto createCategory(CategoryDto categoryDto) {
 
         // Check if the category already exists
         if (categoryRepository.existsByName(categoryDto.getName())) {
-            throw new IllegalArgumentException("Category already exists");
+            throw new ClientException("Category already exists");
         }
 
         // Create a new category entity
@@ -46,25 +49,26 @@ public class CategoryService {
                 .toList();
     }
 
+    @SneakyThrows
     public CategoryDto getCategoryById(Long id) {
         return categoryRepository.findById(id)
                 .map(CategoryDto::valueFrom)
-                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+                .orElseThrow(() -> new ClientException("Category not found"));
     }
 
-    public Category getById(Long id) {
+    public Category getById(Long id) throws ClientException {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+                .orElseThrow(() -> new ClientException("Category not found"));
     }
 
-    public CategoryDto updateCategory(Long id, CategoryDto categoryDto) {
+    public CategoryDto updateCategory(Long id, CategoryDto categoryDto) throws ClientException {
 
         // Check if the category exists
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+                .orElseThrow(() -> new ClientException("Category not found"));
 
         if (categoryRepository.existsByName(categoryDto.getName())) {
-            throw new IllegalArgumentException("Category already exists");
+            throw new ClientException("Category already exists");
         }
         // Update the category name
         category.setName(categoryDto.getName());
@@ -76,11 +80,12 @@ public class CategoryService {
         return CategoryDto.valueFrom(updatedCategory);
     }
 
+    @SneakyThrows
     public void deleteCategory(Long id) {
 
         // Check if the category exists
         if (!categoryRepository.existsById(id)) {
-            throw new IllegalArgumentException("Category not found");
+            throw new ClientException("Category not found");
         }
 
         // Delete the category from the database

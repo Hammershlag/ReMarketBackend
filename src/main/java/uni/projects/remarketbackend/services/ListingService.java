@@ -2,6 +2,7 @@ package uni.projects.remarketbackend.services;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -81,6 +82,7 @@ public class ListingService {
         return listingRepository.findAll(spec, PageRequest.of(page - 1, pageSize, sorting)).map(ListingDto::valueFrom);
     }
 
+    @SneakyThrows
     @Transactional
     public ListingDto createListing(HttpServletRequest request, ListingDto listingDto) {
         Account account = accountService.getAccount(request);
@@ -117,6 +119,7 @@ public class ListingService {
         return ListingDto.valueFrom(savedListing);
     }
 
+    @SneakyThrows
     public ListingDto updateListing(HttpServletRequest request, Long id, ListingDto listing) {
 
         Account account = accountService.getAccount(request);
