@@ -2,6 +2,7 @@ package uni.projects.remarketbackend.services;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import uni.projects.remarketbackend.config.jwt.JwtTokenProvider;
 import uni.projects.remarketbackend.dao.AccountRepository;
 import uni.projects.remarketbackend.dto.AccountDto;
 import uni.projects.remarketbackend.exceptions.exceptions.AuthenticationException;
+import uni.projects.remarketbackend.exceptions.exceptions.ClientException;
 import uni.projects.remarketbackend.models.Photo;
 import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.models.account.Roles;
@@ -140,12 +142,13 @@ public class AccountService {
         return passwordEncoder.matches(password, account.getPassword());
     }
 
+    @SneakyThrows
     public void becomeSeller(Account account) throws AuthenticationException {
         if (account.getRole() == Roles.SELLER) {
             return;
         }
         if (account.getRole() == Roles.ADMIN || account.getRole() == Roles.STUFF) {
-            throw new AuthenticationException("You cannot downgrade your role");
+            throw new ClientException("You cannot downgrade your role");
         }
         account.setRole(Roles.SELLER);
         account.setUpdatedAt(LocalDateTime.now());

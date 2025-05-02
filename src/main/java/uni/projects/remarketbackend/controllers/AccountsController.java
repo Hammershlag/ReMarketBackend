@@ -101,8 +101,17 @@ public class AccountsController {
     }
 
     @Operation(summary = "Become seller",
-            description = "Make user a seller",
+            description = "Make user a seller. Only users with the role USER can become sellers. Admins and staff cannot downgrade their roles.",
             tags = {"Accounts"})
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "User is now a seller", content = @Content),
+                    @ApiResponse(responseCode = "406", description = "Something went wrong, message will be provided", content = @Content),
+                    @ApiResponse(responseCode = "409", description = "Jwt exception, you have to login or refresh tokens", content = @Content),
+                    @ApiResponse(responseCode = "404", description = "User not found", content = @Content),
+                    @ApiResponse(responseCode = "400", description = "Cannot downgrade role (e.g., admin to seller)", content = @Content)
+            }
+    )
     @PostMapping("/become-seller")
     @SneakyThrows
     public ResponseEntity<String> becomeSeller(HttpServletRequest request) {
