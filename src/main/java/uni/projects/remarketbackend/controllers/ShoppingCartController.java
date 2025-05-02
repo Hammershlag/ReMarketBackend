@@ -2,6 +2,7 @@ package uni.projects.remarketbackend.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +25,14 @@ public class ShoppingCartController {
     @Autowired
     private ShoppingCartService shoppingCartService;
 
+    @SneakyThrows
     @GetMapping
     @Transactional
     public ResponseEntity<ShoppingCartDto> getShoppingCart(HttpServletRequest request) {
         return ResponseEntity.ok(shoppingCartService.getShoppingCart(request));
     }
 
+    @SneakyThrows
     @PostMapping("/checkout")
     @Transactional
     public ResponseEntity<Void> checkout(HttpServletRequest request, @RequestBody OrderRequest orderRequest) {
