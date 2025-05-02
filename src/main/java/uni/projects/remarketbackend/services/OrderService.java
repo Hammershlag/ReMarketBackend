@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import uni.projects.remarketbackend.dao.OrderRepository;
 import uni.projects.remarketbackend.dto.order.OrderDto;
 import uni.projects.remarketbackend.models.account.Account;
+import uni.projects.remarketbackend.exceptions.exceptions.AuthenticationException;
+import uni.projects.remarketbackend.exceptions.exceptions.NotFoundException;
 
 import java.util.List;
 
@@ -24,10 +26,20 @@ public class OrderService {
     @Autowired
     private AccountService accountService;
 
-    public List<OrderDto> getOrders(HttpServletRequest request) {
+    public List<OrderDto> getOrders(HttpServletRequest request) throws AuthenticationException, NotFoundException {
         Account account = accountService.getAccount(request);
-        return orderRepository.findAllByBuyer(account).stream()
+        if (account == null) {
+            throw new AuthenticationException("User is not authenticated.");
+        }
+
+        List<OrderDto> orders = orderRepository.findAllByBuyer(account).stream()
                 .map(OrderDto::valueFrom)
                 .toList();
+
+        if (orders.isEmpty()) {
+            throw new NotFoundException("No orders found for the current user.");
+        }
+
+        return orders;
     }
 }
