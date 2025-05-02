@@ -7,7 +7,7 @@
           <option name="delegateBuildToMaven" value="false" />
           <option name="environmentProperties">
             <map>
-              <entry key="SPRING_PROFILES_ACTIVE" value="docker-postgres" />
+              <entry key="SPRING_PROFILES_ACTIVE" value="test" />
             </map>
           </option>
           <option name="jreName" value="#USE_PROJECT_JDK" />
