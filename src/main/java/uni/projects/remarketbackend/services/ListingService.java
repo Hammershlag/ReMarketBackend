@@ -3,6 +3,7 @@ package uni.projects.remarketbackend.services;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +14,7 @@ import uni.projects.remarketbackend.dao.*;
 import uni.projects.remarketbackend.dto.ListingDto;
 import uni.projects.remarketbackend.dto.PhotoDto;
 import uni.projects.remarketbackend.dto.ReviewDto;
+import uni.projects.remarketbackend.exceptions.exceptions.*;
 import uni.projects.remarketbackend.models.*;
 import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.models.listing.Listing;
@@ -86,34 +88,46 @@ public class ListingService {
     @Transactional
     public ListingDto createListing(HttpServletRequest request, ListingDto listingDto) {
         Account account = accountService.getAccount(request);
+        if (account == null) {
+            throw new AuthenticationException("User is not authenticated.");
+        }
+
+        if (StringUtils.isBlank(listingDto.getTitle())) {
+            throw new ClientException("Title cannot be empty.");
+        }
+
+        if (listingDto.getPrice() <= 0) {
+            throw new ClientException("Price must be greater than zero.");
+        }
+
+        if (StringUtils.isBlank(listingDto.getDescription()))
+            throw new ClientException("Description cannot be empty.");
+
         Listing listing = new Listing();
         listing.setTitle(listingDto.getTitle());
         listing.setDescription(listingDto.getDescription());
         listing.setPrice(listingDto.getPrice());
         listing.setAverageRating(-1f);
 
-        List<Photo> photos = new ArrayList<>(
-                photoRepository.findAllById(
+        List<Photo> photos = photoRepository.findAllById(
                 listingDto.getPhotos().stream()
                         .map(PhotoDto::getId)
                         .collect(Collectors.toList())
-        ));
+        );
 
-//        List<Photo> photos = new ArrayList<>();
-//        for (PhotoDto photoDto : listingDto.getPhotos()) {
-//            Long photoId = photoDto.getId();
-//            Photo photo = photoRepository.findById(photoId)
-//                    .orElseThrow(() -> new RuntimeException("Photo with ID " + photoId + " not found"));
-//
-//            System.out.println("Photo: " + photo.getId() + " " + photo.getUploader().getUsername());
-//            photos.add(photo);
-//        }
+        if (photos.isEmpty()) {
+            throw new ClientException("No valid photos provided.");
+        }
 
         listing.setPhotos(photos);
-
         listing.setSeller(account);
         listing.setStatus(ListingStatus.ACTIVE);
+
         Category category = categoryService.getById(listingDto.getCategory().getId());
+        if (category == null) {
+            throw new NotFoundException("Category not found.");
+        }
+
         listing.setCategory(category);
         Listing savedListing = listingRepository.save(listing);
         return ListingDto.valueFrom(savedListing);
@@ -121,46 +135,94 @@ public class ListingService {
 
     @SneakyThrows
     public ListingDto updateListing(HttpServletRequest request, Long id, ListingDto listing) {
-
         Account account = accountService.getAccount(request);
-        Listing existingListing = listingRepository.findById(id).orElseThrow(() -> new RuntimeException("Listing not found"));
-        if (!existingListing.getSeller().getId().equals(account.getId())) {
-            throw new RuntimeException("You are not the owner of this listing");
+        if (account == null) {
+            throw new AuthenticationException("User is not authenticated.");
         }
+
+        if (StringUtils.isBlank(listing.getTitle())) {
+            throw new ClientException("Title cannot be empty.");
+        }
+
+        if (listing.getPrice() <= 0) {
+            throw new ClientException("Price must be greater than zero.");
+        }
+
+        if (StringUtils.isBlank(listing.getDescription()))
+            throw new ClientException("Description cannot be empty.");
+
+        Listing existingListing = listingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Listing not found."));
+
+        if (!existingListing.getSeller().getId().equals(account.getId())) {
+            throw new AuthenticationException("You are not the owner of this listing.");
+        }
+
         existingListing.setTitle(listing.getTitle());
         existingListing.setDescription(listing.getDescription());
         existingListing.setPrice(listing.getPrice());
-        existingListing.setPhotos(new ArrayList<>(photoRepository.findAllById(
+
+        List<Photo> photos = photoRepository.findAllById(
                 listing.getPhotos().stream()
                         .map(PhotoDto::getId)
-                        .collect(Collectors.toList()))
-        ));
+                        .collect(Collectors.toList())
+        );
+
+        if (photos.isEmpty()) {
+            throw new ClientException("No valid photos provided.");
+        }
+
+        existingListing.setPhotos(photos);
+
         Category category = categoryService.getById(listing.getCategory().getId());
+        if (category == null) {
+            throw new NotFoundException("Category not found.");
+        }
+
         existingListing.setCategory(category);
         Listing savedListing = listingRepository.save(existingListing);
         return ListingDto.valueFrom(savedListing);
     }
 
+    @SneakyThrows
     public void deleteListing(HttpServletRequest request, Long id) {
-
         Account account = accountService.getAccount(request);
-        Listing existingListing = listingRepository.findById(id).orElseThrow(() -> new RuntimeException("Listing not found"));
-        if (!existingListing.getSeller().getId().equals(account.getId())) {
-            throw new RuntimeException("You are not the owner of this listing");
+        if (account == null) {
+            throw new AuthenticationException("User is not authenticated.");
         }
+
+        Listing existingListing = listingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Listing not found."));
+
+        if (!existingListing.getSeller().getId().equals(account.getId())) {
+            throw new AuthenticationException("You are not the owner of this listing.");
+        }
+
+        if (existingListing.getStatus() == ListingStatus.ARCHIVED) {
+            throw new ClientException("Listing is already archived.");
+        }
+
         existingListing.setStatus(ListingStatus.ARCHIVED);
         listingRepository.save(existingListing);
     }
 
+    @SneakyThrows
     public ListingDto getListing(Long id) {
         return listingRepository.findById(id)
                 .map(ListingDto::valueFrom)
-                .orElseThrow(() -> new RuntimeException("Listing not found"));
+                .orElseThrow(() -> new NotFoundException("Listing not found."));
     }
 
+    @SneakyThrows
     public void addToWishlist(HttpServletRequest request, Long id) {
         Account account = accountService.getAccount(request);
-        Listing listing = listingRepository.findById(id).orElseThrow(() -> new RuntimeException("Listing not found"));
+        if (account == null) {
+            throw new AuthenticationException("User is not authenticated.");
+        }
+
+        Listing listing = listingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Listing not found."));
+
         if (account.getWishlist() == null) {
             Wishlist wishlist = new Wishlist();
             wishlist.setListings(new ArrayList<>());
@@ -168,31 +230,45 @@ public class ListingService {
             account.setWishlist(wishlist);
             accountRepository.save(account);
         }
+
         if (account.getWishlist().getListings().contains(listing)) {
-            throw new RuntimeException("Listing already in wishlist");
+            throw new ClientException("Listing already in wishlist.");
         }
+
         account.getWishlist().getListings().add(listing);
         wishlistRepository.save(account.getWishlist());
         accountRepository.save(account);
     }
 
+    @SneakyThrows
     public void removeFromWishlist(HttpServletRequest request, Long id) {
         Account account = accountService.getAccount(request);
-        Listing listing = listingRepository.findById(id).orElseThrow(() -> new RuntimeException("Listing not found"));
-        if (account.getWishlist() == null) {
-            throw new RuntimeException("Wishlist not found");
+        if (account == null) {
+            throw new AuthenticationException("User is not authenticated.");
         }
-        if (!account.getWishlist().getListings().contains(listing)) {
-            throw new RuntimeException("Listing not in wishlist");
+
+        Listing listing = listingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Listing not found."));
+
+        if (account.getWishlist() == null || !account.getWishlist().getListings().contains(listing)) {
+            throw new NotFoundException("Listing not in wishlist.");
         }
+
         account.getWishlist().getListings().remove(listing);
         wishlistRepository.save(account.getWishlist());
         accountRepository.save(account);
     }
 
+    @SneakyThrows
     public void addToShoppingCart(HttpServletRequest request, Long id) {
         Account account = accountService.getAccount(request);
-        Listing listing = listingRepository.findById(id).orElseThrow(() -> new RuntimeException("Listing not found"));
+        if (account == null) {
+            throw new AuthenticationException("User is not authenticated.");
+        }
+
+        Listing listing = listingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Listing not found."));
+
         if (account.getShoppingCart() == null) {
             ShoppingCart shoppingCart = new ShoppingCart();
             shoppingCart.setListings(new ArrayList<>());
@@ -200,36 +276,61 @@ public class ListingService {
             account.setShoppingCart(shoppingCart);
             accountRepository.save(account);
         }
+
         if (account.getShoppingCart().getListings().contains(listing)) {
-            throw new RuntimeException("Listing already in wishlist");
+            throw new ClientException("Listing already in shopping cart.");
         }
+
         account.getShoppingCart().getListings().add(listing);
         shoppingCartRepository.save(account.getShoppingCart());
         accountRepository.save(account);
     }
 
+    @SneakyThrows
     public void removeFromShoppingCart(HttpServletRequest request, Long id) {
         Account account = accountService.getAccount(request);
-        Listing listing = listingRepository.findById(id).orElseThrow(() -> new RuntimeException("Listing not found"));
-        if (account.getShoppingCart() == null) {
-            throw new RuntimeException("Wishlist not found");
+        if (account == null) {
+            throw new AuthenticationException("User is not authenticated.");
         }
-        if (!account.getShoppingCart().getListings().contains(listing)) {
-            throw new RuntimeException("Listing not in wishlist");
+
+        Listing listing = listingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Listing not found."));
+
+        if (account.getShoppingCart() == null || !account.getShoppingCart().getListings().contains(listing)) {
+            throw new NotFoundException("Listing not in shopping cart.");
         }
+
         account.getShoppingCart().getListings().remove(listing);
         shoppingCartRepository.save(account.getShoppingCart());
         accountRepository.save(account);
     }
 
+    @SneakyThrows
     public void addReview(HttpServletRequest request, Long id, ReviewDto reviewDto) {
         Account account = accountService.getAccount(request);
-        Listing listing = listingRepository.findById(id).orElseThrow(() -> new RuntimeException("Listing not found"));
-        if (listing.getReviews().stream().anyMatch(r -> r.getReviewer().getId().equals(account.getId()))) {
-            throw new RuntimeException("You have already reviewed this listing");
+        if (account == null) {
+            throw new AuthenticationException("User is not authenticated.");
         }
+
+        Listing listing = listingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Listing not found."));
+
+        if (listing.getReviews().stream().anyMatch(r -> r.getReviewer().getId().equals(account.getId()))) {
+            throw new ClientException("You have already reviewed this listing.");
+        }
+
         Review reviewEntity = new Review();
         reviewEntity.setRating(reviewDto.getRating());
+
+        if (reviewEntity.getRating() < 1 || reviewEntity.getRating() > 5) {
+            throw new ClientException("Rating must be between 1 and 5.");
+        }
+        if (StringUtils.isBlank(reviewDto.getTitle())) {
+            throw new ClientException("Title cannot be empty.");
+        }
+        if (StringUtils.isBlank(reviewDto.getDescription())) {
+            throw new ClientException("Description cannot be empty.");
+        }
         reviewEntity.setTitle(reviewDto.getTitle());
         reviewEntity.setDescription(reviewDto.getDescription());
         reviewEntity.setReviewer(account);
@@ -245,22 +346,30 @@ public class ListingService {
         listingRepository.save(listing);
     }
 
+    @SneakyThrows
     public Set<ReviewDto> getReviews(Long id) {
-
-        Listing listing = listingRepository.findById(id).orElseThrow(() -> new RuntimeException("Listing not found"));
+        Listing listing = listingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Listing not found."));
         return listing.getReviews().stream()
                 .map(ReviewDto::valueFrom).collect(Collectors.toSet());
-
     }
 
+    @SneakyThrows
     public void deleteReview(HttpServletRequest request, Long id, Long reviewId) {
-
         Account account = accountService.getAccount(request);
-        Listing listing = listingRepository.findById(id).orElseThrow(() -> new RuntimeException("Listing not found"));
-        Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new RuntimeException("Review not found"));
-        if (!review.getReviewer().getId().equals(account.getId())) {
-            throw new RuntimeException("You are not the owner of this review");
+        if (account == null) {
+            throw new AuthenticationException("User is not authenticated.");
         }
+
+        Listing listing = listingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Listing not found."));
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new NotFoundException("Review not found."));
+
+        if (!review.getReviewer().getId().equals(account.getId())) {
+            throw new AuthenticationException("You are not the owner of this review.");
+        }
+
         listing.getReviews().remove(review);
         listing.setAverageRating((float) listing.getReviews().stream()
                 .mapToInt(Review::getRating)
@@ -270,14 +379,32 @@ public class ListingService {
         listingRepository.save(listing);
     }
 
+    @SneakyThrows
     public void updateReview(HttpServletRequest request, Long id, Long reviewId, ReviewDto review) {
-
         Account account = accountService.getAccount(request);
-        Listing listing = listingRepository.findById(id).orElseThrow(() -> new RuntimeException("Listing not found"));
-        Review existingReview = reviewRepository.findById(reviewId).orElseThrow(() -> new RuntimeException("Review not found"));
-        if (!existingReview.getReviewer().getId().equals(account.getId())) {
-            throw new RuntimeException("You are not the owner of this review");
+        if (account == null) {
+            throw new AuthenticationException("User is not authenticated.");
         }
+
+        Listing listing = listingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Listing not found."));
+        Review existingReview = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new NotFoundException("Review not found."));
+
+        if (!existingReview.getReviewer().getId().equals(account.getId())) {
+            throw new AuthenticationException("You are not the owner of this review.");
+        }
+
+        if (review.getRating() < 1 || review.getRating() > 5) {
+            throw new ClientException("Rating must be between 1 and 5.");
+        }
+        if (StringUtils.isBlank(review.getTitle())) {
+            throw new ClientException("Title cannot be empty.");
+        }
+        if (StringUtils.isBlank(review.getDescription())) {
+            throw new ClientException("Description cannot be empty.");
+        }
+
         existingReview.setRating(review.getRating());
         existingReview.setTitle(review.getTitle());
         existingReview.setDescription(review.getDescription());
