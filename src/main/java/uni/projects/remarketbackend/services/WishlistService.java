@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import uni.projects.remarketbackend.dao.AccountRepository;
 import uni.projects.remarketbackend.dao.WishlistRepository;
 import uni.projects.remarketbackend.dto.WishlistDto;
+import uni.projects.remarketbackend.exceptions.exceptions.AuthenticationException;
 import uni.projects.remarketbackend.models.Wishlist;
 import uni.projects.remarketbackend.models.account.Account;
 
@@ -29,8 +30,11 @@ public class WishlistService {
     @Autowired
     private AccountRepository accountRepository;
 
-    public WishlistDto getWishlist(HttpServletRequest request) {
+    public WishlistDto getWishlist(HttpServletRequest request) throws AuthenticationException {
         Account account = accountService.getAccount(request);
+        if (account == null) {
+            throw new AuthenticationException("Account not found");
+        }
 
         if (account.getWishlist() == null) {
             Wishlist wishlist = new Wishlist();
