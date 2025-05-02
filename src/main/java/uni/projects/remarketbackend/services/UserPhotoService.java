@@ -54,12 +54,18 @@ public class UserPhotoService {
         return PhotoDto.valueFrom(savedPhoto);
     }
 
-    public PhotoDto getPhoto(Account account) {
+    public PhotoDto getPhoto(Account account) throws ClientException {
+        if (account.getPhoto() == null) {
+            throw new ClientException("User has no photo");
+        }
         return account.getPhoto() != null ? PhotoDto.valueFrom(account.getPhoto()) : null;
     }
 
-    public void deletePhoto(Account account) {
+    public void deletePhoto(Account account) throws ClientException {
 
+        if (account.getPhoto() == null) {
+            throw new ClientException("User has no photo");
+        }
         photoRepository.deleteById(account.getPhoto().getId());
         account.setPhoto(null);
         account.setUpdatedAt(LocalDateTime.now());
