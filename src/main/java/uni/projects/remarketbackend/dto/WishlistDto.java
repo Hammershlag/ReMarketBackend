@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import uni.projects.remarketbackend.models.Wishlist;
 import uni.projects.remarketbackend.models.listing.Listing;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,8 +20,10 @@ import java.util.stream.Collectors;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(name = "WishlistDto", description = "Data transfer object for wishlist details")
 public class WishlistDto {
 
+    @Schema(description = "List of listings in the wishlist")
     private List<ListingDto> listings;
 
     public static WishlistDto valueFrom(Wishlist wishlist) {
@@ -40,3 +44,4 @@ public class WishlistDto {
         return wishlist;
     }
 }
+

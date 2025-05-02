@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import uni.projects.remarketbackend.models.order.Address;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * @author Tomasz Zbroszczyk
@@ -13,12 +14,24 @@ import uni.projects.remarketbackend.models.order.Address;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(name = "AddressDto", description = "Data transfer object for address details")
 public class AddressDto {
+    @Schema(description = "Unique identifier of the address", example = "1")
     private Long id;
+
+    @Schema(description = "Street name of the address", example = "123 Main St")
     private String street;
+
+    @Schema(description = "City of the address", example = "New York")
     private String city;
+
+    @Schema(description = "State of the address", example = "NY")
     private String state;
+
+    @Schema(description = "Zip code of the address", example = "10001")
     private String zipCode;
+
+    @Schema(description = "Country of the address", example = "USA")
     private String country;
 
     public static AddressDto valueFrom(Address address) {

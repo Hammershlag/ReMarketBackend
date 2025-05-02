@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import uni.projects.remarketbackend.models.Category;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * @author Tomasz Zbroszczyk
@@ -14,9 +15,13 @@ import uni.projects.remarketbackend.models.Category;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(name = "CategoryDto", description = "Data transfer object for category details")
 public class CategoryDto {
 
+    @Schema(description = "Unique identifier of the category", example = "1")
     private Long id;
+
+    @Schema(description = "Name of the category", example = "Electronics")
     private String name;
 
     public static CategoryDto valueFrom(Category category) {
@@ -31,3 +36,4 @@ public class CategoryDto {
         return category;
     }
 }
+

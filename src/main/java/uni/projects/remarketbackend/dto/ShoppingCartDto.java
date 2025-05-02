@@ -9,6 +9,8 @@ import uni.projects.remarketbackend.models.Wishlist;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 /**
  * @author Tomasz Zbroszczyk
  * @version 1.0
@@ -18,8 +20,10 @@ import java.util.stream.Collectors;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(name = "ShoppingCartDto", description = "Data transfer object for shopping cart details")
 public class ShoppingCartDto {
 
+    @Schema(description = "List of listings in the shopping cart")
     private List<ListingDto> listings;
 
     public static ShoppingCartDto valueFrom(ShoppingCart shoppingCart) {
@@ -40,3 +44,4 @@ public class ShoppingCartDto {
         return shoppingCart;
     }
 }
+

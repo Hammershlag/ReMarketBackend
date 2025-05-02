@@ -18,15 +18,16 @@ import java.util.Base64;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(name = "PhotoDto", description = "Data transfer object for photo details")
 public class PhotoDto {
 
-    @Schema(description = "The ID of the image (should be left empty when created, will be returned but ignored if user passes it)", example = "1")
+    @Schema(description = "Unique identifier of the photo", example = "1")
     private Long id;
 
-    @Schema(description = "The Base64 encoded data of the image", example = "iVBORw0KGgoAAAANSUhEUgAA...")
+    @Schema(description = "Base64 encoded data of the photo", example = "iVBORw0KGgoAAAANSUhEUgAA...")
     private String data;
 
-    @Schema(description = "Username of the person who uploaded the image", example = "someUsername")
+    @Schema(description = "Username of the uploader", example = "uploader123")
     private String uploader;
 
     // Static methods for conversion

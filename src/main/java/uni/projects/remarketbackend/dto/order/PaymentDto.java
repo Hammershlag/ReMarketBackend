@@ -7,6 +7,7 @@ import uni.projects.remarketbackend.models.order.payment.Currency;
 import uni.projects.remarketbackend.models.order.payment.Payment;
 import uni.projects.remarketbackend.models.order.payment.PaymentMethod;
 import uni.projects.remarketbackend.models.order.payment.PaymentStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * @author Tomasz Zbroszczyk
@@ -16,11 +17,21 @@ import uni.projects.remarketbackend.models.order.payment.PaymentStatus;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(name = "PaymentDto", description = "Data transfer object for payment details")
 public class PaymentDto {
+    @Schema(description = "Unique identifier of the payment", example = "1")
     private Long id;
+
+    @Schema(description = "Total amount of the payment", example = "99.99")
     private Double total;
+
+    @Schema(description = "Payment method used for the payment", example = "CREDIT_CARD")
     private PaymentMethod paymentMethod;
+
+    @Schema(description = "Status of the payment", example = "COMPLETED")
     private PaymentStatus paymentStatus;
+
+    @Schema(description = "Currency used for the payment", example = "USD")
     private Currency currency;
 
     public static PaymentDto valueFrom(Payment payment) {

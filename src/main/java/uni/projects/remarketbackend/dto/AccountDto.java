@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.models.account.Roles;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * @author Tomasz Zbroszczyk
@@ -15,11 +16,19 @@ import uni.projects.remarketbackend.models.account.Roles;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(name = "AccountDto", description = "Data transfer object for account details")
 public class AccountDto {
 
+    @Schema(description = "Username of the account", example = "user123")
     private String username;
+
+    @Schema(description = "Password of the account (hidden when retrieved)", example = "********")
     private String password;
+
+    @Schema(description = "Email address of the account", example = "user@example.com")
     private String email;
+
+    @Schema(description = "Role of the account", example = "USER")
     private String role;
 
     public static AccountDto fromAccount(Account account) {

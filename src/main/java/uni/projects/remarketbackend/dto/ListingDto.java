@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import uni.projects.remarketbackend.models.Category;
 import uni.projects.remarketbackend.models.listing.Listing;
 import uni.projects.remarketbackend.models.listing.ListingStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 import java.util.Set;
@@ -20,17 +21,37 @@ import java.util.stream.Collectors;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(name = "ListingDto", description = "Data transfer object for listing details")
 public class ListingDto {
 
+    @Schema(description = "Unique identifier of the listing", example = "1")
     private Long id;
+
+    @Schema(description = "Title of the listing", example = "Smartphone for sale")
     private String title;
-    private String description;;
+
+    @Schema(description = "Description of the listing", example = "Brand new smartphone with 128GB storage.")
+    private String description;
+
+    @Schema(description = "Price of the listing", example = "299.99")
     private double price;
+
+    @Schema(description = "List of photos associated with the listing")
     private List<PhotoDto> photos;
+
+    @Schema(description = "Username of the seller", example = "seller123")
     private String sellerUsername;
+
+    @Schema(description = "Status of the listing", example = "ACTIVE")
     private String status;
+
+    @Schema(description = "Category details of the listing")
     private CategoryDto category;
+
+    @Schema(description = "Set of reviews for the listing")
     private Set<ReviewDto> reviews;
+
+    @Schema(description = "Average rating of the listing", example = "4.5")
     private float averageRating;
 
     public static ListingDto valueFrom(Listing listing) {
