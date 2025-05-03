@@ -20,14 +20,6 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Create .env file
-      run: |
-        touch .env
-        echo "SPRING_PROFILES_ACTIVE=test" >> .env
-        echo "JWT_SECRET=qbXIuuEDkAoFP8TZsJGs70tuUscmlcNY90lYjZyA6RYffojPGCDvQ3fWiKscuZTBemOR7rOHkJM29aeoBStX6Ca94FZSm6K95C80NOXOKt9600j4YIaYMNtS3QrMfYJl4Eq0HfbzEmbzOD8cj3H5ddjZuM2JxQthlxL9IX5KQKfWp6mrVsmAqIMKWNQcWG1bNH5kouuJ23krRj0dV2qU9z5Gje6mQCeue98liQ55Dt4gDirvHBWVeCb6wKcmBYSj" >> .env
-        echo "JWT_EXPIRATION=3600000" >> .env
-        echo "JWT_REFRESH_EXPIRATION=86400000" >> .env
-
     - name: Cache Maven packages
       uses: actions/cache@v3
       with:
@@ -36,9 +28,12 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
 
     - name: Build and test with Maven
-      run: |
-        export SPRING_PROFILES_ACTIVE=test
-        mvn -B test
+      env:
+        SPRING_PROFILES_ACTIVE: test
+        JWT_SECRET: qbXIuuEDkAoFP8TZsJGs70tuUscmlcNY90lYjZyA6RYffojPGCDvQ3fWiKscuZTBemOR7rOHkJM29aeoBStX6Ca94FZSm6K95C80NOXOKt9600j4YIaYMNtS3QrMfYJl4Eq0HfbzEmbzOD8cj3H5ddjZuM2JxQthlxL9IX5KQKfWp6mrVsmAqIMKWNQcWG1bNH5kouuJ23krRj0dV2qU9z5Gje6mQCeue98liQ55Dt4gDirvHBWVeCb6wKcmBYSj
+        JWT_EXPIRATION: 3600000
+        JWT_REFRESH_EXPIRATION: 86400000
+      run: mvn -B test
 
     - name: Build package
       run: mvn -B package --file pom.xml -DskipTests
