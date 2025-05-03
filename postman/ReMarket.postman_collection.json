@@ -1,0 +1,1163 @@
+{
+	"info": {
+		"_postman_id": "821cf8f0-9bfd-4a3e-80d7-6b2f18b754b1",
+		"name": "ReMarket",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39800553"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"johndoe3\",\r\n  \"password\": \"{{current_password}}\",\r\n  \"email\": \"{{current_email}}\",\r\n  \"role\": \"someRole\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/auth/register",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"\r",
+									"if(response.accessToken) {\r",
+									"    pm.collectionVariables.set(\"accessToken\", response.accessToken);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"usernameOrEmail\" : \"{{current_email}}\",\r\n    \"password\" : \"{{current_password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/auth/login",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "accounts",
+			"item": [
+				{
+					"name": "photos",
+					"item": [
+						{
+							"name": "Get user photo",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/photo/user",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"photo",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add photo",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "photo",
+											"type": "file",
+											"src": "/C:/Users/tomek/Downloads/Zdjęcie WhatsApp 2025-04-01 o 16.19.00_f863a6c3.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/photo/user",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"photo",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete photo",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/photo/user",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"photo",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit photo",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "photo",
+											"type": "file",
+											"src": "/C:/Users/tomek/Downloads/red.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/photo/user",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"photo",
+										"user"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PutAccount",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"updatedUsername\",\r\n    \"password\": \"updatedPassword\",\r\n    \"email\": \"newEmail\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/accounts",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAccounts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/accounts",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteAccount",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/accounts",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Become seller",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/accounts/become-seller",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								"become-seller"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "categories",
+			"item": [
+				{
+					"name": "PostCategory",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"name\": \"Electronics\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/categories",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PutCategory",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"name\": \"Updated Category Name\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/categories/1",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetCategories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/categories",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetCategory",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/categories/1",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteCategory",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/categories/1",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "listings",
+			"item": [
+				{
+					"name": "photos",
+					"item": [
+						{
+							"name": "Upload photo",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "photo",
+											"type": "file",
+											"src": "/C:/Users/tomek/Downloads/pobierz.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/photo/listing",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"photo",
+										"listing"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "wishlist",
+					"item": [
+						{
+							"name": "AddToWishlist",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/listings/1/wishlist",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"listings",
+										"1",
+										"wishlist"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteFromWishlist",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/listings/1/wishlist",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"listings",
+										"1",
+										"wishlist"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "shopping-cart",
+					"item": [
+						{
+							"name": "AddToShoppingCart",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/listings/1/shopping-cart",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"listings",
+										"1",
+										"shopping-cart"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteFromShoppingCart",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/listings/1/shopping-cart",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"listings",
+										"1",
+										"shopping-cart"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "reviews",
+					"item": [
+						{
+							"name": "Add review",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"rating\": 5,\r\n    \"title\": \"Best product\",\r\n    \"description\": \"Some description\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/listings/1/review",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"listings",
+										"1",
+										"review"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit review",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"rating\": 4,\r\n    \"title\": \"Best product\",\r\n    \"description\": \"I changed my mind\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/listings/1/review/5",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"listings",
+										"1",
+										"review",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get reviews",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/listings/1/reviews",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"listings",
+										"1",
+										"reviews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete review",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/listings/1/review/5",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"listings",
+										"1",
+										"review",
+										"5"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PostListing",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"idk how many test\",\r\n  \"price\": 199.99,\r\n  \"status\": \"ACTIVE\",\r\n  \"category\": {\"id\":1, \"name\":\"someName\"},\r\n  \"description\": \"This is some ddescription\",\r\n  \"photos\": [\r\n    {\"id\":1, \"data\": \"This will be ignored\",\"uploader\": \"test\"}, \r\n    {\"id\":2, \"data\": \"This will be ignored\",\"uploader\": \"test\"}],\r\n  \"sellerUsername\": \"johndoe\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/listings",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"listings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PutListing",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 1,\r\n  \"title\": \"Updated test\",\r\n  \"price\": 199.99,\r\n  \"status\": \"ACTIVE\",\r\n  \"category\": {\"id\":1, \"name\":\"someRandomName\"},\r\n  \"description\": \"This is new, changed description\",\r\n  \"photos\": [],\r\n  \"sellerUsername\": \"johndoes\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/listings/2",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"listings",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetListings",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/listings",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"listings"
+							],
+							"query": [
+								{
+									"key": "minPrice",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "maxPrice",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "categoryId",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "title",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetListing",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/listings/1",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"listings",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteListing",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/listings/1",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"listings",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "wishlists",
+			"item": [
+				{
+					"name": "GetWishlist",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/wishlists",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"wishlists"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "shopping-carts",
+			"item": [
+				{
+					"name": "GetShoppingCart",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/shopping-carts",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"shopping-carts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Checkout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"street\": \"123 Main Street\",\r\n  \"city\": \"Warsaw\",\r\n  \"state\": \"Mazowieckie\",\r\n  \"zipCode\": \"00-001\",\r\n  \"country\": \"Poland\",\r\n  \"paymentMethod\": \"CREDIT_CARD\",\r\n  \"currency\": \"PLN\",\r\n  \"shippingMethod\": \"STANDARD\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/shopping-carts/checkout",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"shopping-carts",
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "Get users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/admin/accounts?page=0&size=10",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"accounts"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Block user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/admin/accounts/2/block",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"accounts",
+								"2",
+								"block"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "payments",
+			"item": [
+				{
+					"name": "PostPayment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"paidOn\": \"2025-04-14T10:30:00Z\",\r\n    \"total\": 199.99,\r\n    \"payerId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/payments",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PutPayment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"paidOn\": \"2025-04-14T12:45:00\",\r\n    \"total\": 249.99,\r\n    \"payerId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/payments/1",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPayments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/payments",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPayment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/payments/1",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeletePayment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/payments/1",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "orders",
+			"item": [
+				{
+					"name": "Get all orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/orders",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{accessToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "accessToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwianRpIjoiMGE3M2E2NmYtYTQxMC00ZTQ5LThjYTEtZmUwNTAyYmQ3YmM2IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiIxIiwiZXhwIjoxNzQzMDg2NjY0LCJpc3MiOiJSZU1hcmtldCIsImF1ZCI6IlJlTWFya2V0RnJvbnQifQ.b8DjbjOmordqVi2Y_I2UvpCCbYipRzd2LGLK3W-Blm8",
+			"type": "string"
+		},
+		{
+			"key": "current_email",
+			"value": "johndoe@example.com",
+			"type": "string"
+		},
+		{
+			"key": "current_password",
+			"value": "StrongPass123!",
+			"type": "string"
+		},
+		{
+			"key": "second_email",
+			"value": "second@mail.com",
+			"type": "string"
+		},
+		{
+			"key": "second_password",
+			"value": "SecondPass123!",
+			"type": "string"
+		}
+	]
+}
