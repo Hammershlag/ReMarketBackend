@@ -6,12 +6,16 @@ on:
   pull_request:
     branches: [ "master", "develop" ]
 
+permissions:
+  contents: read
+  dependency-graph: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
         SPRING_PROFILES_ACTIVE: test
-        JWT_SECRET: qbXIuuEDkAoFP8TZsJGs70tuUscmlcNY90lYjZyA6RYffojPGCDvQ3fWiKscuZTBemOR7rOHkJM29aeoBStX6Ca94FZSm6K95C80NOXOKt9600j4YIaYMNtS3QrMfYJl4Eq0HfbzEmbzOD8cj3H5ddjZuM2JxQthlxL9IX5KQKfWp6mrVsmAqIMKWNQcWG1bNH5kouuJ23krRj0dV2qU9z5Gje6mQCeue98liQ55Dt4gDirvHBWVeCb6wKcmBYSj
+        JWT_SECRET: qbXIuuEDkAoFP8TZsJGs70tuUscmlcNY90lYjZyA6RYffojPGCDvQ3fWiKscuZTBemOR7rOHkJM29aeoBStX6Ca94FZSm6K95C80NOXOKt9600j4YIaYMNtS3QrMfYJl4Eq0HfbzEmbzOD8cj3H5ddjZuM2JxQthlxL9IX5KQKfWp6mr[...]
         JWT_EXPIRATION: 3600000
         JWT_REFRESH_EXPIRATION: 86400000
 
