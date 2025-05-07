@@ -7,7 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uni.projects.remarketbackend.dto.AccountDto;
+import uni.projects.remarketbackend.dto.admin.ExtendedAccountDto;
 import uni.projects.remarketbackend.exceptions.ExceptionDetails;
+import uni.projects.remarketbackend.exceptions.exceptions.NotFoundException;
 import uni.projects.remarketbackend.services.AdminAccountService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,9 +44,27 @@ public class AdminAccountController {
                          content = @Content(schema = @Schema(implementation = ExceptionDetails.class)))
     })
     @GetMapping
-    public ResponseEntity<Page<AccountDto>> getAllAccounts(Pageable pageable) {
-        Page<AccountDto> accounts = adminUserService.getAllAccounts(pageable);
+    public ResponseEntity<Page<ExtendedAccountDto>> getAllAccounts(Pageable pageable) {
+        Page<ExtendedAccountDto> accounts = adminUserService.getAllAccounts(pageable);
         return ResponseEntity.ok(accounts);
+    }
+
+    @Operation(summary = "Retrieve account by ID", description = "Fetches account details by ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved account"),
+            @ApiResponse(responseCode = "404", description = "Account not found",
+                         content = @Content(schema = @Schema(implementation = ExceptionDetails.class))),
+            @ApiResponse(responseCode = "406", description = "Authentication exception",
+                         content = @Content(schema = @Schema(implementation = ExceptionDetails.class))),
+            @ApiResponse(responseCode = "409", description = "JWT token exception",
+                         content = @Content(schema = @Schema(implementation = ExceptionDetails.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                         content = @Content(schema = @Schema(implementation = ExceptionDetails.class)))
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<ExtendedAccountDto> getAccountById(@PathVariable Long id) {
+        ExtendedAccountDto account = adminUserService.getAccountById(id);
+        return ResponseEntity.ok(account);
     }
 
     @Operation(summary = "Block an account", description = "Disables an account by setting its status to DISABLED.")
