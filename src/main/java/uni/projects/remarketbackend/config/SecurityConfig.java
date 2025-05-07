@@ -80,6 +80,7 @@ public class SecurityConfig {
                     authorize.requestMatchers("/actuator/**").hasRole("ADMIN");
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     authorize.anyRequest().authenticated();
+
                 })                .cors(Customizer.withDefaults()) // Enable CORS
                 .httpBasic(Customizer.withDefaults()); // Enable HTTP Basic authentication
 
