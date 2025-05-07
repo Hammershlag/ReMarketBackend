@@ -10,7 +10,7 @@
               <entry key="SPRING_PROFILES_ACTIVE" value="test" />
             </map>
           </option>
-          <option name="jreName" value="24" />
+          <option name="jreName" value="#USE_PROJECT_JDK" />
           <option name="mavenProperties">
             <map />
           </option>
