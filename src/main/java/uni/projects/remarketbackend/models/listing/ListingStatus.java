@@ -9,5 +9,8 @@ public enum ListingStatus {
 
     ACTIVE,
     ARCHIVED,
-    DRAFT
+    DRAFT,
+    FLAGGED,
+    UNDER_REVIEW,
+    BLOCKED
 }

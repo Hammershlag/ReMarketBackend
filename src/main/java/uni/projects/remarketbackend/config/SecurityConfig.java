@@ -75,7 +75,8 @@ public class SecurityConfig {
                     authorize.requestMatchers("/api/shopping-carts").authenticated();
                     authorize.requestMatchers("/api/orders").authenticated();
 
-                    authorize.requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "STUFF");
+                    authorize.requestMatchers("/api/admin/**").hasAnyRole("ADMIN");
+                    authorize.requestMatchers("/api/stuff/**").hasAnyRole("ADMIN", "STUFF");
 
                     authorize.requestMatchers("/actuator/**").hasRole("ADMIN");
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
