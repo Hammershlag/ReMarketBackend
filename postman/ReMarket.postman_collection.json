@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "6873fc92-8d8d-4c66-a801-7e60e58b37e6",
+		"_postman_id": "d76708bc-e481-4763-afa0-d24886d9a45a",
 		"name": "ReMarket",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "39800553",
-		"_collection_link": "https://remarket.postman.co/workspace/ReMarket~231bbd89-44c1-41f3-86ea-bedfce76373b/collection/39800553-6873fc92-8d8d-4c66-a801-7e60e58b37e6?action=share&source=collection_link&creator=39800553"
+		"_collection_link": "https://remarket.postman.co/workspace/ReMarket~231bbd89-44c1-41f3-86ea-bedfce76373b/collection/39838321-d76708bc-e481-4763-afa0-d24886d9a45a?action=share&source=collection_link&creator=39800553"
 	},
 	"item": [
 		{
@@ -129,7 +129,7 @@
 										{
 											"key": "photo",
 											"type": "file",
-											"src": "/C:/Users/tomek/Downloads/pobierz.jpg"
+											"src": "/C:/Users/tomek/Downloads/Zdjęcie WhatsApp 2025-04-01 o 16.19.00_f863a6c3.jpg"
 										}
 									]
 								},
@@ -308,7 +308,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 1,\r\n    \"name\": \"Food\"\r\n}",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"name\": \"Electronics\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -667,7 +667,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"title\": \"idk how many test\",\r\n  \"price\": 199.99,\r\n  \"status\": \"ACTIVE\",\r\n  \"category\": {\"id\":1, \"name\":\"someName\"},\r\n  \"description\": \"This is some ddescription\",\r\n  \"photos\": [\r\n    {\"id\":2, \"data\": \"This will be ignored\",\"uploader\": \"test\"}, \r\n    {\"id\":3, \"data\": \"This will be ignored\",\"uploader\": \"test\"}],\r\n  \"sellerUsername\": \"johndoe\"\r\n}\r\n",
+							"raw": "{\r\n  \"title\": \"idk how many test\",\r\n  \"price\": 199.99,\r\n  \"status\": \"ACTIVE\",\r\n  \"category\": {\"id\":1, \"name\":\"someName\"},\r\n  \"description\": \"This is some ddescription\",\r\n  \"photos\": [\r\n    {\"id\":1, \"data\": \"This will be ignored\",\"uploader\": \"test\"}, \r\n    {\"id\":2, \"data\": \"This will be ignored\",\"uploader\": \"test\"}],\r\n  \"sellerUsername\": \"johndoe\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -819,6 +819,27 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Flag a listing",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/listings/1/flag",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"listings",
+								"1",
+								"flag"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -955,12 +976,19 @@
 					"response": []
 				},
 				{
-					"name": "Get user",
+					"name": "Get listings uner review",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
-							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/admin/accounts/2",
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/admin/listings/status/flagged",
 							"protocol": "{{PROTOCOL}}",
 							"host": [
 								"{{DOMAIN_URL}}"
@@ -968,8 +996,218 @@
 							"path": [
 								"api",
 								"admin",
-								"accounts",
-								"2"
+								"listings",
+								"status",
+								"flagged"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Block listing",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/admin/listings/1/block",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"listings",
+								"1",
+								"block"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Dismiss blocking listing",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/admin/listings/1/dismiss",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"listings",
+								"1",
+								"dismiss"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "payments",
+			"item": [
+				{
+					"name": "PostPayment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"paidOn\": \"2025-04-14T10:30:00Z\",\r\n    \"total\": 199.99,\r\n    \"payerId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/payments",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PutPayment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"paidOn\": \"2025-04-14T12:45:00\",\r\n    \"total\": 249.99,\r\n    \"payerId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/payments/1",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPayments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/payments",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPayment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/payments/1",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeletePayment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/payments/1",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"1"
 							]
 						}
 					},
@@ -994,6 +1232,200 @@
 							"path": [
 								"api",
 								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "stuff",
+			"item": [
+				{
+					"name": "GetListings",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/stuff/listings",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"stuff",
+								"listings"
+							],
+							"query": [
+								{
+									"key": "minPrice",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "maxPrice",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "categoryId",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "title",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetListing",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/stuff/listings/1",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"stuff",
+								"listings",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Flag Listing",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/stuff/listings/1/status/flag",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"stuff",
+								"listings",
+								"1",
+								"status",
+								"flag"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get flagged listings",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/stuff/listings/flagged?page&pageSize",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"stuff",
+								"listings",
+								"flagged"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": null
+								},
+								{
+									"key": "pageSize",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Dismiss flag listing",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/stuff/listings/1/status/dismiss",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"stuff",
+								"listings",
+								"1",
+								"status",
+								"dismiss"
 							]
 						}
 					},
