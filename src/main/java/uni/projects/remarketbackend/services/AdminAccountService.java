@@ -47,4 +47,11 @@ public class AdminAccountService {
         }
         accountRepository.save(account);
     }
+
+    @SneakyThrows
+    public ExtendedAccountDto getAccountById(Long id) {
+        return accountRepository.findById(id)
+                .map(ExtendedAccountDto::fromAccount)
+                .orElseThrow(() -> new NotFoundException("Account not found"));
+    }
 }
