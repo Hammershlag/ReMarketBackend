@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uni.projects.remarketbackend.dto.AccountDto;
+import uni.projects.remarketbackend.dto.admin.ExtendedAccountDto;
 import uni.projects.remarketbackend.exceptions.ExceptionDetails;
 import uni.projects.remarketbackend.services.AdminAccountService;
 
@@ -42,8 +43,8 @@ public class AdminAccountController {
                          content = @Content(schema = @Schema(implementation = ExceptionDetails.class)))
     })
     @GetMapping
-    public ResponseEntity<Page<AccountDto>> getAllAccounts(Pageable pageable) {
-        Page<AccountDto> accounts = adminUserService.getAllAccounts(pageable);
+    public ResponseEntity<Page<ExtendedAccountDto>> getAllAccounts(Pageable pageable) {
+        Page<ExtendedAccountDto> accounts = adminUserService.getAllAccounts(pageable);
         return ResponseEntity.ok(accounts);
     }
 

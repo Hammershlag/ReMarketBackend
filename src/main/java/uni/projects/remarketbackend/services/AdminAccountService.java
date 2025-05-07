@@ -8,9 +8,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uni.projects.remarketbackend.dao.AccountRepository;
 import uni.projects.remarketbackend.dto.AccountDto;
+import uni.projects.remarketbackend.dto.admin.ExtendedAccountDto;
 import uni.projects.remarketbackend.exceptions.exceptions.NotFoundException;
 import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.models.account.Status;
+
+import java.time.LocalDateTime;
 
 /**
  * @author Tomasz Zbroszczyk
@@ -24,16 +27,24 @@ public class AdminAccountService {
     @Autowired
     private AccountRepository accountRepository;
 
-    public Page<AccountDto> getAllAccounts(Pageable pageable) {
+    public Page<ExtendedAccountDto> getAllAccounts(Pageable pageable) {
         return accountRepository.findAll(pageable)
-                .map(AccountDto::fromAccount);
+                .map(ExtendedAccountDto::fromAccount);
     }
 
     @SneakyThrows
     public void blockAccount(Long id, HttpServletRequest request) {
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Account not found"));
-        account.setStatus(Status.DISABLED);
+        if (account.getStatus() == Status.DISABLED) {
+            account.setStatus(Status.ACTIVE);
+            account.setDisabledAt(null);
+        } else if (account.getStatus() == Status.ACTIVE) {
+            account.setStatus(Status.DISABLED);
+            account.setDisabledAt(LocalDateTime.now());
+        } else {
+            throw new NotFoundException("Account not found");
+        }
         accountRepository.save(account);
     }
 }
