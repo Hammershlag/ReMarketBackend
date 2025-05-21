@@ -50,8 +50,9 @@ public class ListingService {
     private ReviewRepository reviewRepository;
 
     public Page<ListingDto> getListings(Optional<Double> minPrice, Optional<Double> maxPrice, Optional<Integer> categoryId,
-                                     Optional<String> title, Optional<String> sort, int page, int pageSize) {
-        Specification<Listing> spec = Specification.where(null);
+                                        Optional<String> title, Optional<String> sort, int page, int pageSize) {
+        Specification<Listing> spec = Specification.where((root, query, criteriaBuilder) ->
+                criteriaBuilder.notEqual(root.get("status"), ListingStatus.BLOCKED));
 
         if (minPrice.isPresent()) {
             spec = spec.and((root, query, criteriaBuilder) ->
@@ -115,7 +116,7 @@ public class ListingService {
                         .collect(Collectors.toList())
         );
 
-        if (photos.isEmpty()) {
+        if (photos.isEmpty() && listingDto.getPhotos().size() > 0) {
             throw new ClientException("No valid photos provided.");
         }
 
@@ -208,9 +209,12 @@ public class ListingService {
 
     @SneakyThrows
     public ListingDto getListing(Long id) {
-        return listingRepository.findById(id)
-                .map(ListingDto::valueFrom)
+        Listing listing = listingRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Listing not found."));
+        if (listing.getStatus() == ListingStatus.BLOCKED) {
+            throw new ClientException("Listing has been blocked by admin.");
+        }
+        return ListingDto.valueFrom(listing);
     }
 
     @SneakyThrows
@@ -415,6 +419,27 @@ public class ListingService {
                 .average()
                 .orElse(0));
 
+        listingRepository.save(listing);
+    }
+
+    @SneakyThrows
+    public void flagListing(HttpServletRequest request, Long id) {
+        Listing listing = listingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Listing not found."));
+        if (listing.getStatus() == ListingStatus.UNDER_REVIEW) {
+            throw new ClientException("Listing is already under review.");
+        }
+        if (listing.getStatus() == ListingStatus.BLOCKED) {
+            throw new ClientException("Listing has already been blocked by admin.");
+        }
+        if (listing.getStatus() == ListingStatus.FLAGGED) {
+            return;
+        }
+        Account account = accountService.getAccount(request);
+        if (account == null) {
+            throw new AuthenticationException("User is not authenticated.");
+        }
+        listing.setStatus(ListingStatus.FLAGGED);
         listingRepository.save(listing);
     }
 }
