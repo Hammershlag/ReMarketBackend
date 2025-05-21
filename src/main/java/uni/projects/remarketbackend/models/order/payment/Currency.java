@@ -7,11 +7,11 @@ package uni.projects.remarketbackend.models.order.payment;
  */
 public enum Currency {
 
-    PLN("PLN"),
-    EUR("EUR"),
-    USD("USD"),
-    GBP("GBP"),
-    CHF("CHF");
+    PLN("pln"),
+    EUR("eur"),
+    USD("usd"),
+    GBP("gbp"),
+    CHF("chf");
 
     private final String code;
 

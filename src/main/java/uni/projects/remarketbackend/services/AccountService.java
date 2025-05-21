@@ -20,6 +20,7 @@ import uni.projects.remarketbackend.utils.dataVerification.DataVerification;
 import uni.projects.remarketbackend.utils.dataVerification.NormalDataVerification;
 
 import java.time.LocalDateTime;
+import uni.projects.remarketbackend.services.StripeService;
 
 /**
  * @author Tomasz Zbroszczyk
@@ -58,6 +59,9 @@ public class AccountService {
         account.setCreatedAt(LocalDateTime.now());
         account.setUpdatedAt(LocalDateTime.now());
 
+        String stripeCustomerId = StripeService.createStripeCustomer(account);
+
+        account.setStripeCustomerId(stripeCustomerId);
 
         if (!verifyUser(account))
             throw new AuthenticationException("Invalid user data");

@@ -76,4 +76,7 @@ public class Account {
 
     @Column(nullable = true)
     private LocalDateTime disabledAt;
+
+    @Column(name = "stripe_customer_id", nullable = true, unique = true)
+    private String stripeCustomerId;
 }
