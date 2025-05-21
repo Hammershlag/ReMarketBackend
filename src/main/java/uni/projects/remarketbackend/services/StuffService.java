@@ -8,10 +8,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import uni.projects.remarketbackend.dao.ListingRepository;
+import uni.projects.remarketbackend.dao.ReviewRepository;
 import uni.projects.remarketbackend.dto.ListingDto;
+import uni.projects.remarketbackend.dto.ReviewDto;
 import uni.projects.remarketbackend.exceptions.exceptions.ClientException;
 import uni.projects.remarketbackend.models.listing.Listing;
 import uni.projects.remarketbackend.models.listing.ListingStatus;
+import uni.projects.remarketbackend.models.review.Review;
+import uni.projects.remarketbackend.models.review.ReviewStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +34,8 @@ public class StuffService {
 
     @Autowired
     private ListingRepository listingRepository;
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     public Page<ListingDto> getListings(Optional<Double> minPrice, Optional<Double> maxPrice, Optional<Integer> categoryId,
                                         Optional<String> title, Optional<String> sort, int page, int pageSize) {
@@ -99,5 +105,32 @@ public class StuffService {
             throw new ClientException("Listing is not flagged");
         listing.setStatus(ListingStatus.ACTIVE);
         listingRepository.save(listing);
+    }
+
+    public Page<ReviewDto> getFlaggedReviews(int page, int pageSize) {
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 10;
+
+        return reviewRepository.findAllByStatus(ReviewStatus.FLAGGED, PageRequest.of(page - 1, pageSize))
+                .map(ReviewDto::valueFrom);
+
+    }
+
+    public void dismissFlagReview(Long id) throws ClientException {
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new ClientException("Review not found"));
+        if (review.getStatus() != ReviewStatus.FLAGGED)
+            throw new ClientException("Review is not flagged");
+        review.setStatus(ReviewStatus.ACTIVE);
+        reviewRepository.save(review);
+    }
+
+    public void flagReview(Long id) throws ClientException {
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new ClientException("Review not found"));
+        if (review.getStatus() == ReviewStatus.BLOCKED)
+            throw new ClientException("Review is already blocked");
+        review.setStatus(ReviewStatus.UNDER_REVIEW);
+        reviewRepository.save(review);
     }
 }

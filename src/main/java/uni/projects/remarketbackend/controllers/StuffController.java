@@ -1,11 +1,13 @@
 package uni.projects.remarketbackend.controllers;
 
 import jakarta.transaction.Transactional;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uni.projects.remarketbackend.dto.ListingDto;
+import uni.projects.remarketbackend.dto.ReviewDto;
 import uni.projects.remarketbackend.services.StuffService;
 
 import java.util.Optional;
@@ -67,6 +69,32 @@ public class StuffController {
     @PutMapping("/listings/{id}/status/dismiss")
     public ResponseEntity<Void> dismissFlagListing(@PathVariable Long id) {
         stuffService.dismissFlagListing(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/reviews/flagged")
+    @Transactional
+    public ResponseEntity<Page<ReviewDto>> getFlaggedReviews(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int pageSize) {
+
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 10;
+
+        return ResponseEntity.ok(stuffService.getFlaggedReviews(page, pageSize));
+    }
+
+    @SneakyThrows
+    @PutMapping("/review/{id}/status/flag")
+    public ResponseEntity<Void> flagReview(@PathVariable Long id) {
+        stuffService.flagReview(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @SneakyThrows
+    @PutMapping("/review/{id}/status/dismiss")
+    public ResponseEntity<Void> dismissFlagReview(@PathVariable Long id) {
+        stuffService.dismissFlagReview(id);
         return ResponseEntity.ok().build();
     }
 

@@ -43,7 +43,4 @@ public class AdminListingsController {
         adminListingService.dismissListing(id);
         return ResponseEntity.noContent().build();
     }
-
-
-
 }
