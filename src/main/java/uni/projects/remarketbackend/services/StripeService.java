@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.models.order.payment.Payment;
 
-import java.util.Map;
-
 @Service
 public class StripeService {
 
