@@ -3,7 +3,7 @@ package uni.projects.remarketbackend.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uni.projects.remarketbackend.models.Review;
+import uni.projects.remarketbackend.models.review.Review;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**

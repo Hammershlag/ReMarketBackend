@@ -657,6 +657,33 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Flag review",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"rating\": 5,\r\n    \"title\": \"Best product\",\r\n    \"description\": \"Some description\"\r\n}"
+								},
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/listings/1/review/1/flag",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"listings",
+										"1",
+										"review",
+										"1",
+										"flag"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -667,7 +694,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"title\": \"idk how many test\",\r\n  \"price\": 199.99,\r\n  \"status\": \"ACTIVE\",\r\n  \"category\": {\"id\":1, \"name\":\"someName\"},\r\n  \"description\": \"This is some ddescription\",\r\n  \"photos\": [\r\n    {\"id\":1, \"data\": \"This will be ignored\",\"uploader\": \"test\"}, \r\n    {\"id\":2, \"data\": \"This will be ignored\",\"uploader\": \"test\"}],\r\n  \"sellerUsername\": \"johndoe\"\r\n}\r\n",
+							"raw": "{\r\n  \"title\": \"idk how many test\",\r\n  \"price\": 199.99,\r\n  \"status\": \"ACTIVE\",\r\n  \"category\": {\"id\":1, \"name\":\"someName\"},\r\n  \"description\": \"This is some ddescription\",\r\n  \"photos\": [],\r\n  \"sellerUsername\": \"johndoe\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -924,6 +951,250 @@
 			"name": "admin",
 			"item": [
 				{
+					"name": "listings",
+					"item": [
+						{
+							"name": "Get listings under review",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/admin/listings/status/flagged",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"listings",
+										"status",
+										"flagged"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "pageSize",
+											"value": "",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Block listing",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/admin/listings/1/block",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"listings",
+										"1",
+										"block"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "pageSize",
+											"value": "",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Dismiss blocking listing",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/admin/listings/1/dismiss",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"listings",
+										"1",
+										"dismiss"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "pageSize",
+											"value": "",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "reviews",
+					"item": [
+						{
+							"name": "Get reviews under review",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/admin/reviews/status/flagged",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"reviews",
+										"status",
+										"flagged"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "pageSize",
+											"value": "",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Block review",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/admin/reviews/1/block",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"reviews",
+										"1",
+										"block"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "pageSize",
+											"value": "",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Dismiss blocking review",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/admin/reviews/1/dismiss",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"reviews",
+										"1",
+										"dismiss"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "pageSize",
+											"value": "",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Get users",
 					"request": {
 						"method": "GET",
@@ -970,123 +1241,6 @@
 								"accounts",
 								"2",
 								"block"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get listings uner review",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/admin/listings/status/flagged",
-							"protocol": "{{PROTOCOL}}",
-							"host": [
-								"{{DOMAIN_URL}}"
-							],
-							"path": [
-								"api",
-								"admin",
-								"listings",
-								"status",
-								"flagged"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "",
-									"disabled": true
-								},
-								{
-									"key": "pageSize",
-									"value": "",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Block listing",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/admin/listings/1/block",
-							"protocol": "{{PROTOCOL}}",
-							"host": [
-								"{{DOMAIN_URL}}"
-							],
-							"path": [
-								"api",
-								"admin",
-								"listings",
-								"1",
-								"block"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "",
-									"disabled": true
-								},
-								{
-									"key": "pageSize",
-									"value": "",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Dismiss blocking listing",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/admin/listings/1/dismiss",
-							"protocol": "{{PROTOCOL}}",
-							"host": [
-								"{{DOMAIN_URL}}"
-							],
-							"path": [
-								"api",
-								"admin",
-								"listings",
-								"1",
-								"dismiss"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "",
-									"disabled": true
-								},
-								{
-									"key": "pageSize",
-									"value": "",
-									"disabled": true
-								}
 							]
 						}
 					},
@@ -1243,193 +1397,285 @@
 			"name": "stuff",
 			"item": [
 				{
-					"name": "GetListings",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
+					"name": "reviews",
+					"item": [
+						{
+							"name": "Get flagged reviews",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"rating\": 5,\r\n    \"title\": \"Best product\",\r\n    \"description\": \"Some description\"\r\n}"
+								},
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/stuff/reviews/flagged",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"stuff",
+										"reviews",
+										"flagged"
+									]
 								}
-							}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/stuff/listings",
-							"protocol": "{{PROTOCOL}}",
-							"host": [
-								"{{DOMAIN_URL}}"
-							],
-							"path": [
-								"api",
-								"stuff",
-								"listings"
-							],
-							"query": [
-								{
-									"key": "minPrice",
-									"value": "",
-									"disabled": true
+						{
+							"name": "Dismiss flag review",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
 								},
-								{
-									"key": "maxPrice",
-									"value": "",
-									"disabled": true
-								},
-								{
-									"key": "categoryId",
-									"value": "",
-									"disabled": true
-								},
-								{
-									"key": "title",
-									"value": "",
-									"disabled": true
-								},
-								{
-									"key": "page",
-									"value": "",
-									"disabled": true
-								},
-								{
-									"key": "pageSize",
-									"value": "",
-									"disabled": true
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/stuff/review/1/status/dismiss",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"stuff",
+										"review",
+										"1",
+										"status",
+										"dismiss"
+									]
 								}
-							]
+							},
+							"response": []
+						},
+						{
+							"name": "Flag Review",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/stuff/review/1/status/flag",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"stuff",
+										"review",
+										"1",
+										"status",
+										"flag"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				},
 				{
-					"name": "GetListing",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/stuff/listings/1",
-							"protocol": "{{PROTOCOL}}",
-							"host": [
-								"{{DOMAIN_URL}}"
-							],
-							"path": [
-								"api",
-								"stuff",
-								"listings",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Flag Listing",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/stuff/listings/1/status/flag",
-							"protocol": "{{PROTOCOL}}",
-							"host": [
-								"{{DOMAIN_URL}}"
-							],
-							"path": [
-								"api",
-								"stuff",
-								"listings",
-								"1",
-								"status",
-								"flag"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get flagged listings",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/stuff/listings/flagged?page&pageSize",
-							"protocol": "{{PROTOCOL}}",
-							"host": [
-								"{{DOMAIN_URL}}"
-							],
-							"path": [
-								"api",
-								"stuff",
-								"listings",
-								"flagged"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": null
+					"name": "listings",
+					"item": [
+						{
+							"name": "GetListings",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
 								},
-								{
-									"key": "pageSize",
-									"value": null
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/stuff/listings",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"stuff",
+										"listings"
+									],
+									"query": [
+										{
+											"key": "minPrice",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "maxPrice",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "categoryId",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "title",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "pageSize",
+											"value": "",
+											"disabled": true
+										}
+									]
 								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Dismiss flag listing",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/stuff/listings/1/status/dismiss",
-							"protocol": "{{PROTOCOL}}",
-							"host": [
-								"{{DOMAIN_URL}}"
-							],
-							"path": [
-								"api",
-								"stuff",
-								"listings",
-								"1",
-								"status",
-								"dismiss"
-							]
+						{
+							"name": "GetListing",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/stuff/listings/1",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"stuff",
+										"listings",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Flag Listing",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/stuff/listings/1/status/flag",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"stuff",
+										"listings",
+										"1",
+										"status",
+										"flag"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get flagged listings",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/stuff/listings/flagged?page&pageSize",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"stuff",
+										"listings",
+										"flagged"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": null
+										},
+										{
+											"key": "pageSize",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Dismiss flag listing",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/stuff/listings/1/status/dismiss",
+									"protocol": "{{PROTOCOL}}",
+									"host": [
+										"{{DOMAIN_URL}}"
+									],
+									"path": [
+										"api",
+										"stuff",
+										"listings",
+										"1",
+										"status",
+										"dismiss"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				}
 			]
 		}

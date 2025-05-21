@@ -19,6 +19,8 @@ import uni.projects.remarketbackend.models.*;
 import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.models.listing.Listing;
 import uni.projects.remarketbackend.models.listing.ListingStatus;
+import uni.projects.remarketbackend.models.review.Review;
+import uni.projects.remarketbackend.models.review.ReviewStatus;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -214,6 +216,11 @@ public class ListingService {
         if (listing.getStatus() == ListingStatus.BLOCKED) {
             throw new ClientException("Listing has been blocked by admin.");
         }
+        listing.setReviews(
+                listing.getReviews().stream()
+                        .filter(review -> review.getStatus() == ReviewStatus.ACTIVE)
+                        .collect(Collectors.toSet())
+        );
         return ListingDto.valueFrom(listing);
     }
 
@@ -339,6 +346,7 @@ public class ListingService {
         reviewEntity.setDescription(reviewDto.getDescription());
         reviewEntity.setReviewer(account);
         reviewEntity.setListing(listing);
+        reviewEntity.setStatus(ReviewStatus.ACTIVE);
         reviewRepository.save(reviewEntity);
 
         listing.getReviews().add(reviewEntity);
@@ -441,5 +449,25 @@ public class ListingService {
         }
         listing.setStatus(ListingStatus.FLAGGED);
         listingRepository.save(listing);
+    }
+
+    public void flagReview(HttpServletRequest request, Long id, Long reviewId) throws NotFoundException, ClientException, AuthenticationException {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new NotFoundException("Review not found."));
+        if (review.getStatus() == ReviewStatus.UNDER_REVIEW) {
+            throw new ClientException("Review is already under review.");
+        }
+        if (review.getStatus() == ReviewStatus.BLOCKED) {
+            throw new ClientException("Review has already been blocked by admin.");
+        }
+        if (review.getStatus() == ReviewStatus.FLAGGED) {
+            return;
+        }
+        Account account = accountService.getAccount(request);
+        if (account == null) {
+            throw new AuthenticationException("User is not authenticated.");
+        }
+        review.setStatus(ReviewStatus.FLAGGED);
+        reviewRepository.save(review);
     }
 }
