@@ -68,6 +68,7 @@ public class SecurityConfig {
 
 
                     authorize.requestMatchers(HttpMethod.GET, "/api/listings").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET, "/api/listings/{id}").permitAll();
                     authorize.requestMatchers("/api/listings").hasAnyRole("SELLER", "ADMIN", "STUFF");
                     authorize.requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll();
                     authorize.requestMatchers("/api/categories/**").hasAnyRole("SELLER", "ADMIN", "STUFF");
