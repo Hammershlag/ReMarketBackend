@@ -1676,6 +1676,27 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "User statistics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{PROTOCOL}}://{{DOMAIN_URL}}/api/stuff/statistics/users",
+							"protocol": "{{PROTOCOL}}",
+							"host": [
+								"{{DOMAIN_URL}}"
+							],
+							"path": [
+								"api",
+								"stuff",
+								"statistics",
+								"users"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
