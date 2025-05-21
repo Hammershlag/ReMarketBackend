@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uni.projects.remarketbackend.dto.ListingDto;
 import uni.projects.remarketbackend.dto.ReviewDto;
+import uni.projects.remarketbackend.dto.UserStatisticsDto;
 import uni.projects.remarketbackend.services.StuffService;
 
 import java.util.Optional;
@@ -96,6 +97,11 @@ public class StuffController {
     public ResponseEntity<Void> dismissFlagReview(@PathVariable Long id) {
         stuffService.dismissFlagReview(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/statistics/users")
+    public ResponseEntity<UserStatisticsDto> getUserStatistics() {
+        return ResponseEntity.ok(stuffService.getUserStatistics());
     }
 
 }

@@ -11,12 +11,16 @@ import uni.projects.remarketbackend.dao.ListingRepository;
 import uni.projects.remarketbackend.dao.ReviewRepository;
 import uni.projects.remarketbackend.dto.ListingDto;
 import uni.projects.remarketbackend.dto.ReviewDto;
+import uni.projects.remarketbackend.dto.UserStatisticsDto;
 import uni.projects.remarketbackend.exceptions.exceptions.ClientException;
 import uni.projects.remarketbackend.models.listing.Listing;
 import uni.projects.remarketbackend.models.listing.ListingStatus;
 import uni.projects.remarketbackend.models.review.Review;
 import uni.projects.remarketbackend.models.review.ReviewStatus;
+import uni.projects.remarketbackend.models.account.Status;
+import uni.projects.remarketbackend.dao.AccountRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +40,8 @@ public class StuffService {
     private ListingRepository listingRepository;
     @Autowired
     private ReviewRepository reviewRepository;
+    @Autowired
+    private AccountRepository accountRepository;
 
     public Page<ListingDto> getListings(Optional<Double> minPrice, Optional<Double> maxPrice, Optional<Integer> categoryId,
                                         Optional<String> title, Optional<String> sort, int page, int pageSize) {
@@ -132,5 +138,15 @@ public class StuffService {
             throw new ClientException("Review is already blocked");
         review.setStatus(ReviewStatus.UNDER_REVIEW);
         reviewRepository.save(review);
+    }
+
+    public UserStatisticsDto getUserStatistics() {
+        long activeUsers = accountRepository.countByStatus(Status.ACTIVE);
+        long blockedUsers = accountRepository.countByStatus(Status.DISABLED);
+        long deletedUsers = accountRepository.countByDeletedAtIsNotNull();
+        long newUsers = accountRepository.countByCreatedAtAfter(LocalDateTime.now().minusDays(7));
+        long loggedInLast24h = accountRepository.countByLastLoginAfter(LocalDateTime.now().minusDays(1));
+
+        return new UserStatisticsDto(activeUsers, blockedUsers, deletedUsers, newUsers, loggedInLast24h);
     }
 }
