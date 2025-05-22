@@ -14,6 +14,7 @@ import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.models.order.payment.Payment;
 
 @Service
+@Component
 public class StripeService {
 
     @Value("${STRIPE_SECRET}")
