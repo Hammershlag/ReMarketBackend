@@ -14,7 +14,6 @@ import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.models.order.payment.Payment;
 
 @Service
-@Component
 public class StripeService {
 
     @Value("${STRIPE_SECRET}")
@@ -23,7 +22,6 @@ public class StripeService {
     static {
         Stripe.apiKey = System.getenv("STRIPE_SECRET");
     }
-
 
     public static String createStripeCustomer(Account account) throws Exception {
         CustomerCreateParams params = CustomerCreateParams.builder()
