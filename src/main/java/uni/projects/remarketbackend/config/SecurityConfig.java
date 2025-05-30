@@ -67,15 +67,17 @@ public class SecurityConfig {
                     authorize.requestMatchers(HttpMethod.GET, "/api/photo/listing/**").permitAll();
 
 
-                    authorize.requestMatchers(HttpMethod.GET, "/api/listing").permitAll();
-                    authorize.requestMatchers("/api/listing").hasAnyRole("SELLER", "ADMIN", "STUFF");
+                    authorize.requestMatchers(HttpMethod.GET, "/api/listings").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET, "/api/listings/{id}").permitAll();
+                    authorize.requestMatchers("/api/listings").hasAnyRole("SELLER", "ADMIN", "STUFF");
                     authorize.requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll();
                     authorize.requestMatchers("/api/categories/**").hasAnyRole("SELLER", "ADMIN", "STUFF");
                     authorize.requestMatchers("/api/wishlists").authenticated();
                     authorize.requestMatchers("/api/shopping-carts").authenticated();
                     authorize.requestMatchers("/api/orders").authenticated();
 
-                    authorize.requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "STUFF");
+                    authorize.requestMatchers("/api/admin/**").hasAnyRole("ADMIN");
+                    authorize.requestMatchers("/api/stuff/**").hasAnyRole("ADMIN", "STUFF");
 
                     authorize.requestMatchers("/actuator/**").hasRole("ADMIN");
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
