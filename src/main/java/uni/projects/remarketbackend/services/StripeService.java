@@ -19,6 +19,10 @@ public class StripeService {
     @Value("${STRIPE_SECRET}")
     private String stripeSecret;
 
+    static {
+        Stripe.apiKey = System.getenv("STRIPE_SECRET");
+    }
+
 
     public static String createStripeCustomer(Account account) throws Exception {
         CustomerCreateParams params = CustomerCreateParams.builder()
