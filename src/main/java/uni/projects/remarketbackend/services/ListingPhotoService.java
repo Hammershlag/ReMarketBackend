@@ -1,6 +1,8 @@
 package uni.projects.remarketbackend.services;
 
+import com.stripe.model.tax.Registration;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +16,7 @@ import uni.projects.remarketbackend.models.Photo;
 import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.models.listing.Listing;
 
+import java.util.Base64;
 import java.util.List;
 
 /**
@@ -63,6 +66,24 @@ public class ListingPhotoService {
         Photo photo = photoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Photo not found."));
         return PhotoDto.valueFrom(photo);
+    }
+
+    @Transactional
+    public Photo createPhoto(PhotoDto photoDto) throws ClientException, AuthenticationException {
+//        Photo photoEntity = new Photo();
+//        try {
+//            photoEntity.setData(Base64.getDecoder().decode(photoDto.getData()));
+//            photoEntity.setUploader(photoDto.getUploader());
+//        }
+        Photo photo = new Photo();
+        try {
+            photo.setData(Base64.getDecoder().decode(photoDto.getData()));
+            photo.setUploader(accountService.getAccount(photoDto.getUploader()));
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to upload photo.", e);
+        }
+        Photo savedPhoto = photoRepository.save(photo);
+        return savedPhoto;
     }
 
     public void deletePhoto(Long id, Long listingId, HttpServletRequest request) throws ClientException, AuthenticationException, NotFoundException {
