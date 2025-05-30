@@ -19,6 +19,8 @@ import uni.projects.remarketbackend.models.*;
 import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.models.listing.Listing;
 import uni.projects.remarketbackend.models.listing.ListingStatus;
+import uni.projects.remarketbackend.models.review.Review;
+import uni.projects.remarketbackend.models.review.ReviewStatus;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -50,8 +52,9 @@ public class ListingService {
     private ReviewRepository reviewRepository;
 
     public Page<ListingDto> getListings(Optional<Double> minPrice, Optional<Double> maxPrice, Optional<Integer> categoryId,
-                                     Optional<String> title, Optional<String> sort, int page, int pageSize) {
-        Specification<Listing> spec = Specification.where(null);
+                                        Optional<String> title, Optional<String> sort, int page, int pageSize) {
+        Specification<Listing> spec = Specification.where((root, query, criteriaBuilder) ->
+                criteriaBuilder.notEqual(root.get("status"), ListingStatus.BLOCKED));
 
         if (minPrice.isPresent()) {
             spec = spec.and((root, query, criteriaBuilder) ->
@@ -115,7 +118,7 @@ public class ListingService {
                         .collect(Collectors.toList())
         );
 
-        if (photos.isEmpty()) {
+        if (photos.isEmpty() && listingDto.getPhotos().size() > 0) {
             throw new ClientException("No valid photos provided.");
         }
 
@@ -208,9 +211,17 @@ public class ListingService {
 
     @SneakyThrows
     public ListingDto getListing(Long id) {
-        return listingRepository.findById(id)
-                .map(ListingDto::valueFrom)
+        Listing listing = listingRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Listing not found."));
+        if (listing.getStatus() == ListingStatus.BLOCKED) {
+            throw new ClientException("Listing has been blocked by admin.");
+        }
+        listing.setReviews(
+                listing.getReviews().stream()
+                        .filter(review -> review.getStatus() == ReviewStatus.ACTIVE)
+                        .collect(Collectors.toSet())
+        );
+        return ListingDto.valueFrom(listing);
     }
 
     @SneakyThrows
@@ -335,6 +346,7 @@ public class ListingService {
         reviewEntity.setDescription(reviewDto.getDescription());
         reviewEntity.setReviewer(account);
         reviewEntity.setListing(listing);
+        reviewEntity.setStatus(ReviewStatus.ACTIVE);
         reviewRepository.save(reviewEntity);
 
         listing.getReviews().add(reviewEntity);
@@ -416,5 +428,46 @@ public class ListingService {
                 .orElse(0));
 
         listingRepository.save(listing);
+    }
+
+    @SneakyThrows
+    public void flagListing(HttpServletRequest request, Long id) {
+        Listing listing = listingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Listing not found."));
+        if (listing.getStatus() == ListingStatus.UNDER_REVIEW) {
+            throw new ClientException("Listing is already under review.");
+        }
+        if (listing.getStatus() == ListingStatus.BLOCKED) {
+            throw new ClientException("Listing has already been blocked by admin.");
+        }
+        if (listing.getStatus() == ListingStatus.FLAGGED) {
+            return;
+        }
+        Account account = accountService.getAccount(request);
+        if (account == null) {
+            throw new AuthenticationException("User is not authenticated.");
+        }
+        listing.setStatus(ListingStatus.FLAGGED);
+        listingRepository.save(listing);
+    }
+
+    public void flagReview(HttpServletRequest request, Long id, Long reviewId) throws NotFoundException, ClientException, AuthenticationException {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new NotFoundException("Review not found."));
+        if (review.getStatus() == ReviewStatus.UNDER_REVIEW) {
+            throw new ClientException("Review is already under review.");
+        }
+        if (review.getStatus() == ReviewStatus.BLOCKED) {
+            throw new ClientException("Review has already been blocked by admin.");
+        }
+        if (review.getStatus() == ReviewStatus.FLAGGED) {
+            return;
+        }
+        Account account = accountService.getAccount(request);
+        if (account == null) {
+            throw new AuthenticationException("User is not authenticated.");
+        }
+        review.setStatus(ReviewStatus.FLAGGED);
+        reviewRepository.save(review);
     }
 }
