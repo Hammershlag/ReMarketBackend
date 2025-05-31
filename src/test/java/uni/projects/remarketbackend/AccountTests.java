@@ -123,4 +123,16 @@ public class AccountTests {
         });
         assertThat(exception.getMessage()).isEqualTo("Email already exists");
     }
+
+    @Test
+    @Order(8)
+    void testDowngradeRoleThrowsException() {
+        createdAccount.setRole(Roles.STUFF);
+        accountRepository.save(createdAccount);
+
+        Exception exception = assertThrows(ClientException.class, () -> {
+            accountService.becomeSeller(createdAccount);
+        });
+        assertThat(exception.getMessage()).isEqualTo("You cannot downgrade your role");
+    }
 }
