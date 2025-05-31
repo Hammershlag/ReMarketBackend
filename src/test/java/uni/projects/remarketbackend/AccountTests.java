@@ -76,4 +76,13 @@ public class AccountTests {
         assertThat(fetched).isNotNull();
         assertThat(fetched.getUsername()).isEqualTo("testUser");
     }
+
+    @Test
+    @Order(3)
+    void testUpdateAccount() throws Exception {
+        AccountDto updatedDto = new AccountDto("updatedUser", "StrongPass123!", "updated@example.com", Roles.USER.getRole());
+        Account updated = accountService.updateAccount(createdAccount, updatedDto);
+        assertThat(updated.getUsername()).isEqualTo("updatedUser");
+        assertThat(updated.getEmail()).isEqualTo("updated@example.com");
+    }
 }
