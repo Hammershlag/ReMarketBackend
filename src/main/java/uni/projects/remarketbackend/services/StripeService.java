@@ -20,10 +20,6 @@ public class StripeService {
     @Value("${STRIPE_SECRET}")
     private String stripeSecret;
 
-    static {
-        Stripe.apiKey = System.getenv("STRIPE_SECRET");
-    }
-
     @PostConstruct
     public void init() {
         Stripe.apiKey = stripeSecret;
