@@ -5,19 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.web.servlet.MockMvc;
 import uni.projects.remarketbackend.dao.*;
 import uni.projects.remarketbackend.models.account.*;
 import uni.projects.remarketbackend.dto.*;
 import uni.projects.remarketbackend.dto.auth.*;
-import uni.projects.remarketbackend.models.listing.ListingStatus;
 import uni.projects.remarketbackend.services.*;
 import  uni.projects.remarketbackend.services.auth.AuthService;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -30,9 +27,6 @@ public class ListingsTests {
 
     @Autowired private MockMvc mockMvc;
     @Autowired private AccountRepository accountRepository;
-    @Autowired private ListingRepository listingRepository;
-    @Autowired private CategoryRepository categoryRepository;
-    @Autowired private PhotoRepository photoRepository;
 
     @Autowired private AccountService accountService;
     @Autowired private AuthService authService;
@@ -40,33 +34,26 @@ public class ListingsTests {
     @Autowired private CategoryService categoryService;
     @Autowired private ListingPhotoService listingPhotoService;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-
     private JwtAuthResponse tokens;
-    private AccountDto accountDto;
-    private  PhotoDto photoDto;
-    private CategoryDto categoryDto;
     private ListingDto listingDto;
 
     @BeforeAll
     void setUp() throws Exception {
 
-        accountDto = new AccountDto(
+        AccountDto accountDto = new AccountDto(
                 "user123",
                 "StrongPass123!",
                 "johntest@example.com",
                 Roles.ADMIN.getRole()
         );
 
-        photoDto = new PhotoDto(
+        PhotoDto photoDto = new PhotoDto(
                 1L,
                 "testdata",
                 "user123"
         );
 
-        categoryDto =  new CategoryDto(
+        CategoryDto categoryDto = new CategoryDto(
                 1L,
                 "test"
         );
@@ -93,29 +80,12 @@ public class ListingsTests {
 
         LoginDto loginDto = new LoginDto(accountDto.getUsername(), accountDto.getPassword());
         tokens = authService.login(loginDto);
-
-
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader("Authorization", "Bearer " + tokens.getAccessToken());
 
         listingService.createListing(request, listingDto);
 
     }
-
-//    @AfterEach
-//    public void tearDown() {
-//        jdbcTemplate.execute("DELETE FROM wishlists_listings");
-////
-//        listingRepository.deleteAll();
-//        categoryRepository.deleteAll();
-//        photoRepository.deleteAll();
-//        accountRepository.deleteAll();
-//
-//        jdbcTemplate.execute("ALTER TABLE listings ALTER COLUMN id RESTART WITH 1");
-//        jdbcTemplate.execute("ALTER TABLE photos ALTER COLUMN id RESTART WITH 1");
-//        jdbcTemplate.execute("ALTER TABLE categories ALTER COLUMN id RESTART WITH 1");
-//        jdbcTemplate.execute("ALTER TABLE accounts ALTER COLUMN id RESTART WITH 1");
-//    }
 
     @Test
     @Order(1)
@@ -201,7 +171,7 @@ public class ListingsTests {
     void testGetReviews() throws Exception {
 
         mockMvc.perform(get("/api/listings/1/reviews")
-                        .header("Authorization", "Bearer " + tokens.getAccessToken())) // Include a valid token here)
+                        .header("Authorization", "Bearer " + tokens.getAccessToken()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
     }
