@@ -27,6 +27,11 @@ public class ListingsTests {
 
     @Autowired private MockMvc mockMvc;
     @Autowired private AccountRepository accountRepository;
+    @Autowired private ListingRepository listingRepository;
+
+    @Autowired private CategoryRepository categoryRepository;
+    @Autowired private PhotoRepository photoRepository;
+
 
     @Autowired private AccountService accountService;
     @Autowired private AuthService authService;
