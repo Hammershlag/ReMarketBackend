@@ -94,4 +94,13 @@ public class AccountTests {
         assertThat(seller).isNotNull();
         assertThat(seller.getRole()).isEqualTo(Roles.SELLER);
     }
+
+    @Test
+    @Order(5)
+    void testDeleteAccount() {
+        accountService.deleteAccount(createdAccount);
+        Account deleted = accountRepository.findById(createdAccount.getId()).orElse(null);
+        assertThat(deleted).isNotNull();
+        assertThat(deleted.getStatus()).isEqualTo(Status.DELETED);
+    }
 }
