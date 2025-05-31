@@ -66,4 +66,14 @@ public class AccountTests {
         assertThat(createdAccount.getUsername()).isEqualTo("testUser");
         assertThat(createdAccount.getStatus()).isEqualTo(Status.ACTIVE);
     }
+
+    @Test
+    @Order(2)
+    void testGetCurrentAccount() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("Authorization", "Bearer " + tokens.getAccessToken());
+        Account fetched = accountService.getAccount(request);
+        assertThat(fetched).isNotNull();
+        assertThat(fetched.getUsername()).isEqualTo("testUser");
+    }
 }
