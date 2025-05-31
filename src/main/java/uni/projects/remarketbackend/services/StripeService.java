@@ -8,6 +8,7 @@ import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
 import com.stripe.param.checkout.SessionCreateParams;
 import com.stripe.model.checkout.Session;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uni.projects.remarketbackend.models.account.Account;
@@ -22,6 +23,12 @@ public class StripeService {
     static {
         Stripe.apiKey = System.getenv("STRIPE_SECRET");
     }
+
+    @PostConstruct
+    public void init() {
+        Stripe.apiKey = stripeSecret;
+    }
+
 
     public static String createStripeCustomer(Account account) throws Exception {
         CustomerCreateParams params = CustomerCreateParams.builder()
