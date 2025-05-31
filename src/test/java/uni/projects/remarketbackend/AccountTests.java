@@ -103,4 +103,14 @@ public class AccountTests {
         assertThat(deleted).isNotNull();
         assertThat(deleted.getStatus()).isEqualTo(Status.DELETED);
     }
+
+    @Test
+    @Order(6)
+    void testDuplicateUsernameThrowsException() {
+        AccountDto duplicateUsernameDto = new AccountDto("updatedUser", "AnotherPass123!", "newemail@example.com", Roles.USER.getRole());
+        Exception exception = assertThrows(AuthenticationException.class, () -> {
+            accountService.createUser(duplicateUsernameDto);
+        });
+        assertThat(exception.getMessage()).isEqualTo("Username already exists");
+    }
 }
