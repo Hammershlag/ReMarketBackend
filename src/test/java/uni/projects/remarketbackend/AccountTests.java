@@ -113,4 +113,14 @@ public class AccountTests {
         });
         assertThat(exception.getMessage()).isEqualTo("Username already exists");
     }
+
+    @Test
+    @Order(7)
+    void testDuplicateEmailThrowsException() {
+        AccountDto duplicateEmailDto = new AccountDto("newUsername", "AnotherPass123!", "updated@example.com", Roles.USER.getRole());
+        Exception exception = assertThrows(AuthenticationException.class, () -> {
+            accountService.createUser(duplicateEmailDto);
+        });
+        assertThat(exception.getMessage()).isEqualTo("Email already exists");
+    }
 }
