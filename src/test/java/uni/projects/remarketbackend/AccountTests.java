@@ -85,4 +85,13 @@ public class AccountTests {
         assertThat(updated.getUsername()).isEqualTo("updatedUser");
         assertThat(updated.getEmail()).isEqualTo("updated@example.com");
     }
+
+    @Test
+    @Order(4)
+    void testBecomeSeller() throws Exception {
+        accountService.becomeSeller(createdAccount);
+        Account seller = accountRepository.findById(createdAccount.getId()).orElse(null);
+        assertThat(seller).isNotNull();
+        assertThat(seller.getRole()).isEqualTo(Roles.SELLER);
+    }
 }
