@@ -1,6 +1,7 @@
 package uni.projects.remarketbackend.services;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,6 +66,7 @@ public class ShoppingCartService {
     }
 
     @SneakyThrows
+    @Transactional
     public String checkout(HttpServletRequest request, OrderRequest orderDto) throws AuthenticationException, NotFoundException, ClientException {
 
         Account account = accountService.getAccount(request);
@@ -73,9 +75,9 @@ public class ShoppingCartService {
         }
 
         ShoppingCart shoppingCart = account.getShoppingCart();
-//        if (shoppingCart == null || shoppingCart.getListings().isEmpty()) {
-//            throw new NotFoundException("Shopping cart is empty or not found.");
-//        }
+        if (shoppingCart == null || shoppingCart.getListings().isEmpty()) {
+            throw new NotFoundException("Shopping cart is empty or not found.");
+        }
 
         if (orderDto.getStreet() == null || orderDto.getStreet().isBlank()) {
             throw new ClientException("Street address cannot be empty.");
@@ -113,11 +115,12 @@ public class ShoppingCartService {
         paymentRepository.save(payment);
 
 //        stripeService.createPayment(payment, account);
-        String sessionId = stripeService.createCheckoutSession(payment.getTotal().longValue());
 
         order.setPayment(payment);
         order.setOrderStatus(OrderStatus.SHIPPING);
         orderRepository.save(order);
+        String sessionId = stripeService.createCheckoutSession(order);
+
 
         shoppingCart.setListings(new ArrayList<>());
         shoppingCartRepository.save(shoppingCart);

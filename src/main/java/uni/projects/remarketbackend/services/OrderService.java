@@ -8,6 +8,7 @@ import uni.projects.remarketbackend.dto.order.OrderDto;
 import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.exceptions.exceptions.AuthenticationException;
 import uni.projects.remarketbackend.exceptions.exceptions.NotFoundException;
+import uni.projects.remarketbackend.models.order.Order;
 
 import java.util.List;
 
