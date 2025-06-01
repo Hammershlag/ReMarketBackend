@@ -70,10 +70,10 @@ public class StripeService {
                                 .setPriceData(
                                         SessionCreateParams.LineItem.PriceData.builder()
                                                 .setCurrency("usd")
-                                                .setUnitAmount(2000l)
+                                                .setUnitAmount(totalAmount)
                                                 .setProductData(
                                                         SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                                                .setName("Cool Product")
+                                                                .setName("Total")
                                                                 .build()
                                                 )
                                                 .build()
