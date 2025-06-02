@@ -100,4 +100,13 @@ public class AdminListingTests {
         assertThat(page.getContent()).isNotEmpty();
         assertThat(page.getContent().get(0).getStatus()).isEqualTo(ListingStatus.UNDER_REVIEW.name());
     }
+
+    @Test
+    @Order(2)
+    void testDismissListing() {
+        adminListingService.dismissListing(listingDto.getId());
+        Listing updated = listingRepository.findById(listingDto.getId()).orElse(null);
+        assertThat(updated).isNotNull();
+        assertThat(updated.getStatus()).isEqualTo(ListingStatus.ACTIVE);
+    }
 }
