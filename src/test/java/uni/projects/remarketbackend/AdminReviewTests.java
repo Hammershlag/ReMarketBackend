@@ -86,4 +86,13 @@ public class AdminReviewTests {
         assertThat(page.getContent()).isNotEmpty();
         assertThat(page.getContent().get(0).getStatus()).isEqualTo(ReviewStatus.UNDER_REVIEW.name());
     }
+
+    @Test
+    @Order(2)
+    void testDismissReview() {
+        adminReviewService.dismissReview(reviewDto.getId());
+        Review updated = reviewRepository.findById(reviewDto.getId()).orElse(null);
+        assertThat(updated).isNotNull();
+        assertThat(updated.getStatus()).isEqualTo(ReviewStatus.ACTIVE);
+    }
 }
