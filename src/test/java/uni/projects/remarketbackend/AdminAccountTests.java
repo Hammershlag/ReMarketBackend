@@ -85,4 +85,16 @@ public class AdminAccountTests {
         assertThat(unblocked.getStatus()).isEqualTo(Status.ACTIVE);
         assertThat(unblocked.getDisabledAt()).isNull();
     }
+
+    @Test
+    @Order(4)
+    void testBlockAccountNotFoundThrows() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        Long invalidId = 9999L;
+        Exception exception = assertThrows(NotFoundException.class, () -> {
+            adminAccountService.blockAccount(invalidId, request);
+        });
+        assertThat(exception.getMessage()).isEqualTo("Account not found");
+    }
+
 }
