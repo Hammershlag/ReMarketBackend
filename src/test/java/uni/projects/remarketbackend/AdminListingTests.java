@@ -109,4 +109,13 @@ public class AdminListingTests {
         assertThat(updated).isNotNull();
         assertThat(updated.getStatus()).isEqualTo(ListingStatus.ACTIVE);
     }
+
+    @Test
+    @Order(3)
+    void testBlockListing() {
+        adminListingService.blockListing(listingDto.getId());
+        Listing updated = listingRepository.findById(listingDto.getId()).orElse(null);
+        assertThat(updated).isNotNull();
+        assertThat(updated.getStatus()).isEqualTo(ListingStatus.BLOCKED);
+    }
 }
