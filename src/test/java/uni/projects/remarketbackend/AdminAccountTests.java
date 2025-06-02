@@ -62,4 +62,27 @@ public class AdminAccountTests {
         assertThat(dto).isNotNull();
         assertThat(dto.getUsername()).isEqualTo(testAccount.getUsername());
     }
+
+    @Test
+    @Order(3)
+    void testBlockAndUnblockAccount() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+
+        // Initially active
+        assertThat(testAccount.getStatus()).isEqualTo(Status.ACTIVE);
+
+        // Block
+        adminAccountService.blockAccount(testAccount.getId(), request);
+        Account blocked = accountRepository.findById(testAccount.getId()).orElse(null);
+        assertThat(blocked).isNotNull();
+        assertThat(blocked.getStatus()).isEqualTo(Status.DISABLED);
+        assertThat(blocked.getDisabledAt()).isNotNull();
+
+        // Unblock
+        adminAccountService.blockAccount(testAccount.getId(), request);
+        Account unblocked = accountRepository.findById(testAccount.getId()).orElse(null);
+        assertThat(unblocked).isNotNull();
+        assertThat(unblocked.getStatus()).isEqualTo(Status.ACTIVE);
+        assertThat(unblocked.getDisabledAt()).isNull();
+    }
 }
