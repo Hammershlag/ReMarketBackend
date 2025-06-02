@@ -97,4 +97,13 @@ public class AdminAccountTests {
         assertThat(exception.getMessage()).isEqualTo("Account not found");
     }
 
+    @Test
+    @Order(5)
+    void testGetAccountByIdNotFoundThrows() {
+        Long invalidId = 9999L;
+        Exception exception = assertThrows(NotFoundException.class, () -> {
+            adminAccountService.getAccountById(invalidId);
+        });
+        assertThat(exception.getMessage()).isEqualTo("Account not found");
+    }
 }
