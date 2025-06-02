@@ -54,4 +54,12 @@ public class AdminAccountTests {
         assertThat(page).isNotNull();
         assertThat(page.getContent()).isNotEmpty();
     }
+
+    @Test
+    @Order(2)
+    void testGetAccountById() {
+        ExtendedAccountDto dto = adminAccountService.getAccountById(testAccount.getId());
+        assertThat(dto).isNotNull();
+        assertThat(dto.getUsername()).isEqualTo(testAccount.getUsername());
+    }
 }
