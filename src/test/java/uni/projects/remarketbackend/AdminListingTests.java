@@ -128,4 +128,14 @@ public class AdminListingTests {
         });
         assertThat(ex.getMessage()).isEqualTo("Listing not found");
     }
+
+    @Test
+    @Order(5)
+    void testDismissListingNotFound() {
+        Long invalidId = 9999L;
+        Exception ex = assertThrows(ClientException.class, () -> {
+            adminListingService.dismissListing(invalidId);
+        });
+        assertThat(ex.getMessage()).isEqualTo("Listing not found");
+    }
 }
