@@ -114,4 +114,14 @@ public class AdminReviewTests {
         });
         assertThat(ex.getMessage()).isEqualTo("Review not found");
     }
+
+    @Test
+    @Order(5)
+    void testBlockReviewNotFound() {
+        Long invalidId = 9999L;
+        Exception ex = assertThrows(ClientException.class, () -> {
+            adminReviewService.blockReviews(invalidId);
+        });
+        assertThat(ex.getMessage()).isEqualTo("Review not found");
+    }
 }
