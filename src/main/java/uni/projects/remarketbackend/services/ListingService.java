@@ -317,6 +317,7 @@ public class ListingService {
     }
 
     @SneakyThrows
+    @Transactional
     public void addReview(HttpServletRequest request, Long id, ReviewDto reviewDto) {
         Account account = accountService.getAccount(request);
         if (account == null) {
