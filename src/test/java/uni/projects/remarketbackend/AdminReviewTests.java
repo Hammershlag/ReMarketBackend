@@ -104,4 +104,14 @@ public class AdminReviewTests {
         assertThat(updated).isNotNull();
         assertThat(updated.getStatus()).isEqualTo(ReviewStatus.BLOCKED);
     }
+
+    @Test
+    @Order(4)
+    void testDismissReviewNotFound() {
+        Long invalidId = 9999L;
+        Exception ex = assertThrows(ClientException.class, () -> {
+            adminReviewService.dismissReview(invalidId);
+        });
+        assertThat(ex.getMessage()).isEqualTo("Review not found");
+    }
 }
