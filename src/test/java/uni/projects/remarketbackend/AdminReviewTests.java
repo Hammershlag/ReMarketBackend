@@ -95,4 +95,13 @@ public class AdminReviewTests {
         assertThat(updated).isNotNull();
         assertThat(updated.getStatus()).isEqualTo(ReviewStatus.ACTIVE);
     }
+
+    @Test
+    @Order(3)
+    void testBlockReview() {
+        adminReviewService.blockReviews(reviewDto.getId());
+        Review updated = reviewRepository.findById(reviewDto.getId()).orElse(null);
+        assertThat(updated).isNotNull();
+        assertThat(updated.getStatus()).isEqualTo(ReviewStatus.BLOCKED);
+    }
 }
