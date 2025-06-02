@@ -118,4 +118,14 @@ public class AdminListingTests {
         assertThat(updated).isNotNull();
         assertThat(updated.getStatus()).isEqualTo(ListingStatus.BLOCKED);
     }
+
+    @Test
+    @Order(4)
+    void testBlockListingNotFound() {
+        Long invalidId = 9999L;
+        Exception ex = assertThrows(ClientException.class, () -> {
+            adminListingService.blockListing(invalidId);
+        });
+        assertThat(ex.getMessage()).isEqualTo("Listing not found");
+    }
 }
