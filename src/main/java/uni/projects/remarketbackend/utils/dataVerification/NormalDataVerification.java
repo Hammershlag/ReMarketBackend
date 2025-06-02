@@ -54,7 +54,8 @@ public class NormalDataVerification implements DataVerification {
 
     @Override
     public boolean verifyPassword(String password) { //TODO include regex to check for example for spaces
-        return password.length() >= MIN_PASSWORD_LENGTH && password.length() <= MAX_PASSWORD_LENGTH;
+        return (password.length() >= MIN_PASSWORD_LENGTH && password.length() <= MAX_PASSWORD_LENGTH)
+                || password.length() == 60;
     }
 
 }
