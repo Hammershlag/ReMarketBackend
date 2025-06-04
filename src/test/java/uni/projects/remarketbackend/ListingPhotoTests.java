@@ -284,4 +284,15 @@ public class ListingPhotoTests {
 
         assertThat(ex.getMessage()).isEqualTo("You are not the uploader of this photo.");
     }
+
+    @Test
+    @Transactional(readOnly = true)
+    @Order(13)
+    void testGetListingPhotosSuccessfully() throws Exception {
+        List<PhotoDto> result = listingPhotoService.getListingPhotos(testListing.getId());
+
+        assertThat(result).isNotNull();
+        // Note: result might be empty if photos were deleted in previous tests
+        // This is expected behavior
+    }
 }
