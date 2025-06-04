@@ -139,4 +139,18 @@ public class ListingPhotoTests {
 
         assertThat(ex.getMessage()).isEqualTo("User is not authenticated.");
     }
+
+    @Test
+    @Order(3)
+    void testUploadPhotoFailsWhenFileEmpty() {
+        MockMultipartFile emptyFile = new MockMultipartFile(
+                "photo", "test.jpg", "image/jpeg", new byte[0]
+        );
+
+        Exception ex = assertThrows(ClientException.class, () -> {
+            listingPhotoService.uploadPhoto(emptyFile, testAccount);
+        });
+
+        assertThat(ex.getMessage()).isEqualTo("Photo file is empty.");
+    }
 }
