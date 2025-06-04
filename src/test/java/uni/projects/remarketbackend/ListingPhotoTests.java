@@ -218,4 +218,21 @@ public class ListingPhotoTests {
         assertThat(result.getId()).isNotNull();
         assertThat(result.getUploader().getUsername()).isEqualTo("photouser");
     }
+
+    @Test
+    @Transactional
+    @Order(9)
+    void testDeletePhotoSuccessfully() throws Exception {
+        PhotoDto newPhotoDto = new PhotoDto(null, Base64.getEncoder().encodeToString("delete test data".getBytes()), "photouser");
+        Photo photoToDelete = listingPhotoService.createPhoto(newPhotoDto);
+
+        testListing = listingRepository.findById(testListing.getId()).orElseThrow();
+
+        testListing.getPhotos().add(photoToDelete);
+        testListing = listingRepository.save(testListing);
+
+        listingPhotoService.deletePhoto(photoToDelete.getId(), testListing.getId(), request);
+
+        assertThat(photoRepository.findById(photoToDelete.getId())).isEmpty();
+    }
 }
