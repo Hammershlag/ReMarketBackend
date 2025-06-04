@@ -205,4 +205,17 @@ public class ListingPhotoTests {
 
         assertThat(ex.getMessage()).isEqualTo("Photo not found.");
     }
+
+    @Test
+    @Transactional
+    @Order(8)
+    void testCreatePhotoSuccessfully() throws Exception {
+        PhotoDto photoDto = new PhotoDto(null, Base64.getEncoder().encodeToString("new photo data".getBytes()), "photouser");
+
+        Photo result = listingPhotoService.createPhoto(photoDto);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isNotNull();
+        assertThat(result.getUploader().getUsername()).isEqualTo("photouser");
+    }
 }
