@@ -125,4 +125,18 @@ public class ListingPhotoTests {
         assertThat(result.getId()).isNotNull();
         assertThat(result.getUploader()).isEqualTo("photouser");
     }
+
+    @Test
+    @Order(2)
+    void testUploadPhotoFailsWhenNotAuthenticated() {
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "photo", "test.jpg", "image/jpeg", "test content".getBytes()
+        );
+
+        Exception ex = assertThrows(AuthenticationException.class, () -> {
+            listingPhotoService.uploadPhoto(mockFile, null);
+        });
+
+        assertThat(ex.getMessage()).isEqualTo("User is not authenticated.");
+    }
 }
