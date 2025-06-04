@@ -260,4 +260,28 @@ public class ListingPhotoTests {
 
         assertThat(ex.getMessage()).isEqualTo("Photo not found.");
     }
+
+    @Test
+    @Transactional
+    @Order(12)
+    void testDeletePhotoFailsWhenNotUploader() throws Exception {
+        LoginDto loginDto = new LoginDto("anotheruser", "Password123!");
+        JwtAuthResponse anotherTokens = authService.login(loginDto);
+        MockHttpServletRequest anotherRequest = new MockHttpServletRequest();
+        anotherRequest.addHeader("Authorization", "Bearer " + anotherTokens.getAccessToken());
+
+        PhotoDto newPhotoDto = new PhotoDto(null, Base64.getEncoder().encodeToString("unauthorized test data".getBytes()), "photouser");
+        Photo photoForAuthTest = listingPhotoService.createPhoto(newPhotoDto);
+
+        testListing = listingRepository.findById(testListing.getId()).orElseThrow();
+
+        testListing.getPhotos().add(photoForAuthTest);
+        testListing = listingRepository.save(testListing);
+
+        Exception ex = assertThrows(ClientException.class, () -> {
+            listingPhotoService.deletePhoto(photoForAuthTest.getId(), testListing.getId(), anotherRequest);
+        });
+
+        assertThat(ex.getMessage()).isEqualTo("You are not the uploader of this photo.");
+    }
 }
