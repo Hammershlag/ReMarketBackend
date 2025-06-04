@@ -193,4 +193,16 @@ public class ListingPhotoTests {
         assertThat(result.getId()).isEqualTo(testPhoto.getId());
         assertThat(result.getUploader()).isEqualTo("photouser");
     }
+
+    @Test
+    @Order(7)
+    void testGetPhotoFailsWhenNotFound() {
+        Long nonExistentId = 9999L;
+
+        Exception ex = assertThrows(NotFoundException.class, () -> {
+            listingPhotoService.getPhoto(nonExistentId);
+        });
+
+        assertThat(ex.getMessage()).isEqualTo("Photo not found.");
+    }
 }
