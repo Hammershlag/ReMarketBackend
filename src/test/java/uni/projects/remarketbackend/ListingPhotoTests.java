@@ -235,4 +235,17 @@ public class ListingPhotoTests {
 
         assertThat(photoRepository.findById(photoToDelete.getId())).isEmpty();
     }
+
+
+    @Test
+    @Order(10)
+    void testDeletePhotoFailsWhenListingNotFound() {
+        Long nonExistentListingId = 9999L;
+
+        Exception ex = assertThrows(NotFoundException.class, () -> {
+            listingPhotoService.deletePhoto(testPhoto.getId(), nonExistentListingId, request);
+        });
+
+        assertThat(ex.getMessage()).isEqualTo("Listing not found.");
+    }
 }
