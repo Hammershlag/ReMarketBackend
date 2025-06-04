@@ -66,4 +66,16 @@ public class CustomUserDetailsTests {
         assertThat(authorities).hasSize(1);
         assertThat(authorities.iterator().next().getAuthority()).isEqualTo(Roles.USER.getRole());
     }
+
+    @Test
+    @Order(2)
+    void testLoadUserByUsernameThrowsExceptionWhenUsernameNotFound() {
+        String nonExistentUsername = "nonexistentuser";
+
+        Exception ex = assertThrows(UsernameNotFoundException.class, () -> {
+            customUserDetailsService.loadUserByUsername(nonExistentUsername);
+        });
+
+        assertThat(ex.getMessage()).isEqualTo("User not exists by Username or Email");
+    }
 }
