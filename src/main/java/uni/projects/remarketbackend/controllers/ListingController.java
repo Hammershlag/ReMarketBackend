@@ -277,4 +277,17 @@ public class ListingController {
         listingService.updateReview(request, id, reviewId, review);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/{id}/flag")
+    public ResponseEntity<Void> flagListing(HttpServletRequest request, @PathVariable Long id) {
+        listingService.flagListing(request, id);
+        return ResponseEntity.ok().build();
+    }
+
+    @SneakyThrows
+    @PutMapping("/{id}/review/{reviewId}/flag")
+    public ResponseEntity<Void> flagReview(HttpServletRequest request, @PathVariable Long id, @PathVariable Long reviewId) {
+        listingService.flagReview(request, id, reviewId);
+        return ResponseEntity.ok().build();
+    }
 }

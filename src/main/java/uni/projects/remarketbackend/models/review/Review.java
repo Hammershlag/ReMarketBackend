@@ -1,7 +1,6 @@
-package uni.projects.remarketbackend.models;
+package uni.projects.remarketbackend.models.review;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,6 +43,10 @@ public class Review {
     @JoinColumn(name = "listing_id", referencedColumnName = "id", nullable = false)
     @JsonBackReference
     private Listing listing;
+
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ReviewStatus status;
 
     @Override
     public boolean equals(Object o) {

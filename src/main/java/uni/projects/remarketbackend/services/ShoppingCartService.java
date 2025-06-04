@@ -1,6 +1,8 @@
 package uni.projects.remarketbackend.services;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uni.projects.remarketbackend.dao.*;
@@ -42,6 +44,9 @@ public class ShoppingCartService {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private StripeService stripeService;
+
     public ShoppingCartDto getShoppingCart(HttpServletRequest request) throws AuthenticationException {
 
         Account account = accountService.getAccount(request);
@@ -60,7 +65,9 @@ public class ShoppingCartService {
         return ShoppingCartDto.valueFrom(account.getShoppingCart());
     }
 
-    public void checkout(HttpServletRequest request, OrderRequest orderDto) throws AuthenticationException, NotFoundException, ClientException {
+    @SneakyThrows
+    @Transactional
+    public String checkout(HttpServletRequest request, OrderRequest orderDto) throws AuthenticationException, NotFoundException, ClientException {
 
         Account account = accountService.getAccount(request);
         if (account == null) {
@@ -107,11 +114,17 @@ public class ShoppingCartService {
         payment.setCurrency(orderDto.getCurrency());
         paymentRepository.save(payment);
 
+//        stripeService.createPayment(payment, account);
+
         order.setPayment(payment);
         order.setOrderStatus(OrderStatus.SHIPPING);
         orderRepository.save(order);
+        String sessionId = stripeService.createCheckoutSession(order);
+
 
         shoppingCart.setListings(new ArrayList<>());
         shoppingCartRepository.save(shoppingCart);
+
+        return sessionId;
     }
 }

@@ -3,8 +3,9 @@ package uni.projects.remarketbackend.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uni.projects.remarketbackend.models.Review;
+import uni.projects.remarketbackend.models.review.Review;
 import io.swagger.v3.oas.annotations.media.Schema;
+import uni.projects.remarketbackend.models.review.ReviewStatus;
 
 /**
  * @author Tomasz Zbroszczyk
@@ -36,6 +37,9 @@ public class ReviewDto {
     @Schema(description = "Username of the reviewer", example = "reviewer123")
     private String reviewerUsername;
 
+    @Schema(description = "Status of the review", example = "ACTIVE")
+    private String status;
+
     public static ReviewDto valueFrom(Review review) {
         return new ReviewDto(
                 review.getId(),
@@ -43,7 +47,8 @@ public class ReviewDto {
                 review.getTitle(),
                 review.getDescription(),
                 review.getListing() != null ? review.getListing().getId() : null,
-                review.getReviewer() != null ? review.getReviewer().getUsername() : null
+                review.getReviewer() != null ? review.getReviewer().getUsername() : null,
+                review.getStatus().name()
         );
     }
 
@@ -53,6 +58,7 @@ public class ReviewDto {
         review.setRating(this.rating);
         review.setTitle(this.title);
         review.setDescription(this.description);
+        review.setStatus(ReviewStatus.ACTIVE);
         // Listing and Reviewer should be set in the service layer to avoid incomplete entities
         return review;
     }

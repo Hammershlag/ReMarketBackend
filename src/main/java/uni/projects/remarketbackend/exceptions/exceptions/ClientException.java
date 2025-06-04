@@ -5,7 +5,7 @@ package uni.projects.remarketbackend.exceptions.exceptions;
  * @version 1.0
  * @since 25.04.2025
  */
-public class ClientException extends Exception {
+public class ClientException extends RuntimeException {
     public ClientException(String message) {
         super(message);
     }

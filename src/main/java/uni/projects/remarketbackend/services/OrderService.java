@@ -8,6 +8,7 @@ import uni.projects.remarketbackend.dto.order.OrderDto;
 import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.exceptions.exceptions.AuthenticationException;
 import uni.projects.remarketbackend.exceptions.exceptions.NotFoundException;
+import uni.projects.remarketbackend.models.order.Order;
 
 import java.util.List;
 
@@ -36,9 +37,9 @@ public class OrderService {
                 .map(OrderDto::valueFrom)
                 .toList();
 
-        if (orders.isEmpty()) {
-            throw new NotFoundException("No orders found for the current user.");
-        }
+//        if (orders.isEmpty()) {
+//            throw new NotFoundException("No orders found for the current user.");
+//        }
 
         return orders;
     }
