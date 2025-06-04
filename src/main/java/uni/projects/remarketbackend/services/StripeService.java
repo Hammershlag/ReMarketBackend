@@ -49,8 +49,8 @@ public class StripeService {
     public String createCheckoutSession(Order order) throws StripeException {
         SessionCreateParams.Builder paramsBuilder = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl("http://localhost:3000")
-                .setCancelUrl("http://localhost:3000")
+                .setSuccessUrl("https://remarket-frontend.vercel.app/")
+                .setCancelUrl("https://remarket-frontend.vercel.app/")
                 .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                 ;
 

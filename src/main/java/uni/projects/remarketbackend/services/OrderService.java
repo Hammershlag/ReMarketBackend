@@ -37,9 +37,9 @@ public class OrderService {
                 .map(OrderDto::valueFrom)
                 .toList();
 
-        if (orders.isEmpty()) {
-            throw new NotFoundException("No orders found for the current user.");
-        }
+//        if (orders.isEmpty()) {
+//            throw new NotFoundException("No orders found for the current user.");
+//        }
 
         return orders;
     }
