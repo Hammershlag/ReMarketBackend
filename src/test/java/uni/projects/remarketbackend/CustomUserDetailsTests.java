@@ -78,4 +78,16 @@ public class CustomUserDetailsTests {
 
         assertThat(ex.getMessage()).isEqualTo("User not exists by Username or Email");
     }
+
+    @Test
+    @Order(3)
+    void testLoadUserByEmailThrowsExceptionWhenEmailNotFound() {
+        String nonExistentEmail = "nonexistent@example.com";
+
+        Exception ex = assertThrows(UsernameNotFoundException.class, () -> {
+            customUserDetailsService.loadUserByUsername(nonExistentEmail);
+        });
+
+        assertThat(ex.getMessage()).isEqualTo("User not exists by Username or Email");
+    }
 }
