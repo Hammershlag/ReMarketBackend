@@ -295,4 +295,17 @@ public class ListingPhotoTests {
         // Note: result might be empty if photos were deleted in previous tests
         // This is expected behavior
     }
+
+
+    @Test
+    @Order(14)
+    void testGetListingPhotosFailsWhenListingNotFound() {
+        Long nonExistentListingId = 9999L;
+
+        Exception ex = assertThrows(NotFoundException.class, () -> {
+            listingPhotoService.getListingPhotos(nonExistentListingId);
+        });
+
+        assertThat(ex.getMessage()).isEqualTo("Listing not found.");
+    }
 }
