@@ -182,4 +182,15 @@ public class ListingPhotoTests {
 
         assertThat(ex.getMessage()).isEqualTo("File is not an image.");
     }
+
+    @Test
+    @Transactional(readOnly = true)
+    @Order(6)
+    void testGetPhotoSuccessfully() throws Exception {
+        PhotoDto result = listingPhotoService.getPhoto(testPhoto.getId());
+
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(testPhoto.getId());
+        assertThat(result.getUploader()).isEqualTo("photouser");
+    }
 }
