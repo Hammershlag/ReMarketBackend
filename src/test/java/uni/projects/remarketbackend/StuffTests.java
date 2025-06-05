@@ -346,4 +346,17 @@ public class StuffTests {
 
         assertEquals("Review is already blocked", exception.getMessage());
     }
+
+    @Test
+    @Order(18)
+    void testGetUserStatisticsSuccess() {
+        UserStatisticsDto result = stuffService.getUserStatistics();
+
+        assertNotNull(result);
+        assertTrue(result.getActiveUsers() >= 0);
+        assertTrue(result.getBlockedUsers() >= 0);
+        assertTrue(result.getDeletedUsers() >= 0);
+        assertTrue(result.getNewUsers() >= 0);
+        assertTrue(result.getLoggedInLast24h() >= 0);
+    }
 }
