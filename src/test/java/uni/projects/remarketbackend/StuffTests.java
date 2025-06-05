@@ -191,4 +191,19 @@ public class StuffTests {
 
         assertEquals("Listing is already blocked", exception.getMessage());
     }
+
+    @Test
+    @Order(7)
+    @Transactional(readOnly = true)
+    void testGetFlaggedListingsSuccess() {
+        Listing listing = listingRepository.findById(listingId).orElse(null);
+        listing.setStatus(ListingStatus.FLAGGED);
+        listingRepository.save(listing);
+
+        Page<ListingDto> result = stuffService.getFlaggedListings(1, 10);
+
+        assertNotNull(result);
+        assertTrue(result.getContent().stream().allMatch(l ->
+                l.getStatus().equals(ListingStatus.FLAGGED.name())));
+    }
 }
