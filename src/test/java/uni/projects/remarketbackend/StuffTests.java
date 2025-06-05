@@ -320,4 +320,16 @@ public class StuffTests {
         assertNotNull(flaggedReview);
         assertEquals(ReviewStatus.UNDER_REVIEW, flaggedReview.getStatus());
     }
+
+    @Test
+    @Order(16)
+    void testFlagReviewNotFound() {
+        Long nonExistentId = 99999L;
+
+        ClientException exception = assertThrows(ClientException.class, () -> {
+            stuffService.flagReview(nonExistentId);
+        });
+
+        assertEquals("Review not found", exception.getMessage());
+    }
 }
