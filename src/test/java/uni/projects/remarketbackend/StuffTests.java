@@ -262,4 +262,20 @@ public class StuffTests {
         assertTrue(result.getContent().stream().allMatch(r ->
                 r.getStatus().equals(ReviewStatus.FLAGGED.name())));
     }
+
+    @Test
+    @Order(12)
+    void testDismissFlagReviewSuccess() {
+        Review review = reviewRepository.findById(reviewId).orElse(null);
+        review.setStatus(ReviewStatus.FLAGGED);
+        reviewRepository.save(review);
+
+        assertDoesNotThrow(() -> {
+            stuffService.dismissFlagReview(reviewId);
+        });
+
+        Review dismissedReview = reviewRepository.findById(reviewId).orElse(null);
+        assertNotNull(dismissedReview);
+        assertEquals(ReviewStatus.ACTIVE, dismissedReview.getStatus());
+    }
 }
