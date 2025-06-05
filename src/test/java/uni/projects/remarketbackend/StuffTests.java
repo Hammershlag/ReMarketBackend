@@ -304,4 +304,20 @@ public class StuffTests {
 
         assertEquals("Review is not flagged", exception.getMessage());
     }
+
+    @Test
+    @Order(15)
+    void testFlagReviewSuccess() {
+        Review review = reviewRepository.findById(reviewId).orElse(null);
+        review.setStatus(ReviewStatus.ACTIVE);
+        reviewRepository.save(review);
+
+        assertDoesNotThrow(() -> {
+            stuffService.flagReview(reviewId);
+        });
+
+        Review flaggedReview = reviewRepository.findById(reviewId).orElse(null);
+        assertNotNull(flaggedReview);
+        assertEquals(ReviewStatus.UNDER_REVIEW, flaggedReview.getStatus());
+    }
 }
