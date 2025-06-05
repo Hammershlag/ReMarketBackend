@@ -206,4 +206,20 @@ public class StuffTests {
         assertTrue(result.getContent().stream().allMatch(l ->
                 l.getStatus().equals(ListingStatus.FLAGGED.name())));
     }
+
+    @Test
+    @Order(8)
+    void testDismissFlagListingSuccess() {
+        Listing listing = listingRepository.findById(listingId).orElse(null);
+        listing.setStatus(ListingStatus.FLAGGED);
+        listingRepository.save(listing);
+
+        assertDoesNotThrow(() -> {
+            stuffService.dismissFlagListing(listingId);
+        });
+
+        Listing dismissedListing = listingRepository.findById(listingId).orElse(null);
+        assertNotNull(dismissedListing);
+        assertEquals(ListingStatus.ACTIVE, dismissedListing.getStatus());
+    }
 }
