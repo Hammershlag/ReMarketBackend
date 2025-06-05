@@ -137,4 +137,15 @@ public class UserPhotoTests {
 
         assertThat(ex.getMessage()).isEqualTo("User already has a photo");
     }
+
+    @Test
+    @Transactional(readOnly = true)
+    @Order(6)
+    void testGetPhotoSuccessfully() throws Exception {
+        PhotoDto result = userPhotoService.getPhoto(accountWithPhoto);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(testPhoto.getId());
+        assertThat(result.getUploader()).isEqualTo("userwithphoto");
+    }
 }
