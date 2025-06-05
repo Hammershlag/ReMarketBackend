@@ -170,4 +170,34 @@ public class UserPhotoTests {
 
         assertThat(ex.getMessage()).isEqualTo("User has no photo");
     }
+
+    @Test
+    @Transactional
+    @Order(8)
+    void testDeletePhotoSuccessfully() throws Exception {
+        AccountDto deleteTestAccountDto = new AccountDto("deletetest", "Password123!", "deletetest@example.com", Roles.USER.getRole());
+        Account deleteTestAccount = accountService.createUser(deleteTestAccountDto);
+        deleteTestAccount.setStatus(Status.ACTIVE);
+        deleteTestAccount.setCreatedAt(LocalDateTime.now());
+        deleteTestAccount.setUpdatedAt(LocalDateTime.now());
+
+        Photo photoToDelete = new Photo();
+        photoToDelete.setData("delete test data".getBytes());
+        photoToDelete.setUploader(deleteTestAccount);
+        photoToDelete = photoRepository.save(photoToDelete);
+
+        deleteTestAccount.setPhoto(photoToDelete);
+        deleteTestAccount = accountRepository.save(deleteTestAccount);
+
+        Long photoId = photoToDelete.getId();
+
+        userPhotoService.deletePhoto(deleteTestAccount);
+
+        assertThat(photoRepository.findById(photoId)).isEmpty();
+
+        Account updatedAccount = accountRepository.findById(deleteTestAccount.getId()).orElse(null);
+        assertThat(updatedAccount).isNotNull();
+        assertThat(updatedAccount.getPhoto()).isNull();
+    }
+
 }
