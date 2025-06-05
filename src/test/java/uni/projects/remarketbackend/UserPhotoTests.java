@@ -200,4 +200,26 @@ public class UserPhotoTests {
         assertThat(updatedAccount.getPhoto()).isNull();
     }
 
+    @Test
+    @Order(9)
+    void testDeletePhotoFailsWhenUserHasNoPhoto() {
+        AccountDto freshAccountDto = new AccountDto("nodeleteuser", "Password123!", "nodelete@example.com", Roles.USER.getRole());
+        Account freshAccount;
+        try {
+            freshAccount = accountService.createUser(freshAccountDto);
+            freshAccount.setStatus(Status.ACTIVE);
+            freshAccount.setCreatedAt(LocalDateTime.now());
+            freshAccount.setUpdatedAt(LocalDateTime.now());
+            accountRepository.save(freshAccount);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        Exception ex = assertThrows(ClientException.class, () -> {
+            userPhotoService.deletePhoto(freshAccount);
+        });
+
+        assertThat(ex.getMessage()).isEqualTo("User has no photo");
+    }
+
 }
