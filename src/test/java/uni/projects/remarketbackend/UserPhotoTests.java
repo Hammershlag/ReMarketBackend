@@ -222,4 +222,24 @@ public class UserPhotoTests {
         assertThat(ex.getMessage()).isEqualTo("User has no photo");
     }
 
+
+    @Test
+    @Transactional
+    @Order(10)
+    void testUpdatePhotoSuccessfully() throws Exception {
+        MockMultipartFile newPhotoFile = new MockMultipartFile(
+                "photo", "updated.jpg", "image/jpeg", "updated content".getBytes()
+        );
+
+        PhotoDto result = userPhotoService.updatePhoto(newPhotoFile, accountWithPhoto);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(testPhoto.getId());
+        assertThat(result.getUploader()).isEqualTo("userwithphoto");
+
+        Photo updatedPhoto = photoRepository.findById(testPhoto.getId()).orElse(null);
+        assertThat(updatedPhoto).isNotNull();
+        assertThat(new String(updatedPhoto.getData())).isEqualTo("updated content");
+    }
+
 }
