@@ -165,4 +165,16 @@ public class StuffTests {
         assertNotNull(flaggedListing);
         assertEquals(ListingStatus.UNDER_REVIEW, flaggedListing.getStatus());
     }
+
+    @Test
+    @Order(5)
+    void testFlagListingNotFound() {
+        Long nonExistentId = 99999L;
+
+        ClientException exception = assertThrows(ClientException.class, () -> {
+            stuffService.flagListing(nonExistentId);
+        });
+
+        assertEquals("Listing not found", exception.getMessage());
+    }
 }
