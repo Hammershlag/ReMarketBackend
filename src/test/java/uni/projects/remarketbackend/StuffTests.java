@@ -130,4 +130,15 @@ public class StuffTests {
         assertFalse(result.getContent().isEmpty());
         assertTrue(result.getContent().stream().allMatch(l -> l.getPrice() > 800.0 && l.getPrice() < 1000.0));
     }
+
+    @Test
+    @Order(2)
+    @Transactional(readOnly = true)
+    void testGetListingByIdSuccess() {
+        ListingDto result = stuffService.getListingById(listingId);
+
+        assertNotNull(result);
+        assertEquals(listingId, result.getId());
+        assertEquals("iPhone 13", result.getTitle());
+    }
 }
