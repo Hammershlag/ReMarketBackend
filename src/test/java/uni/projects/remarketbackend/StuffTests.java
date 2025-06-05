@@ -278,4 +278,16 @@ public class StuffTests {
         assertNotNull(dismissedReview);
         assertEquals(ReviewStatus.ACTIVE, dismissedReview.getStatus());
     }
+
+    @Test
+    @Order(13)
+    void testDismissFlagReviewNotFound() {
+        Long nonExistentId = 99999L;
+
+        ClientException exception = assertThrows(ClientException.class, () -> {
+            stuffService.dismissFlagReview(nonExistentId);
+        });
+
+        assertEquals("Review not found", exception.getMessage());
+    }
 }
