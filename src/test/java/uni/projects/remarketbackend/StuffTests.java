@@ -141,4 +141,16 @@ public class StuffTests {
         assertEquals(listingId, result.getId());
         assertEquals("iPhone 13", result.getTitle());
     }
+
+    @Test
+    @Order(3)
+    void testGetListingByIdNotFound() {
+        Long nonExistentId = 99999L;
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            stuffService.getListingById(nonExistentId);
+        });
+
+        assertEquals("Listing not found", exception.getMessage());
+    }
 }
