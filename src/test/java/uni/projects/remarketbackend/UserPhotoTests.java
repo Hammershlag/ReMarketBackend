@@ -242,4 +242,18 @@ public class UserPhotoTests {
         assertThat(new String(updatedPhoto.getData())).isEqualTo("updated content");
     }
 
+    @Test
+    @Order(11)
+    void testUpdatePhotoFailsWhenFileEmpty() {
+        MockMultipartFile emptyFile = new MockMultipartFile(
+                "photo", "test.jpg", "image/jpeg", new byte[0]
+        );
+
+        Exception ex = assertThrows(ClientException.class, () -> {
+            userPhotoService.updatePhoto(emptyFile, accountWithPhoto);
+        });
+
+        assertThat(ex.getMessage()).isEqualTo("Photo file is empty");
+    }
+
 }
