@@ -248,4 +248,18 @@ public class StuffTests {
 
         assertEquals("Listing is not flagged", exception.getMessage());
     }
+
+    @Test
+    @Order(11)
+    void testGetFlaggedReviewsSuccess() {
+        Review review = reviewRepository.findById(reviewId).orElse(null);
+        review.setStatus(ReviewStatus.FLAGGED);
+        reviewRepository.save(review);
+
+        Page<ReviewDto> result = stuffService.getFlaggedReviews(1, 10);
+
+        assertNotNull(result);
+        assertTrue(result.getContent().stream().allMatch(r ->
+                r.getStatus().equals(ReviewStatus.FLAGGED.name())));
+    }
 }
