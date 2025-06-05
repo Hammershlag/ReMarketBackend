@@ -285,4 +285,23 @@ public class UserPhotoTests {
         assertThat(ex.getMessage()).isEqualTo("File is not an image");
     }
 
+    @Test
+    @Order(14)
+    void testUpdatePhotoReturnsNullWhenUserHasNoPhoto() throws Exception {
+        AccountDto freshAccountDto = new AccountDto("noupdateuser", "Password123!", "noupdate@example.com", Roles.USER.getRole());
+        Account freshAccount = accountService.createUser(freshAccountDto);
+        freshAccount.setStatus(Status.ACTIVE);
+        freshAccount.setCreatedAt(LocalDateTime.now());
+        freshAccount.setUpdatedAt(LocalDateTime.now());
+        accountRepository.save(freshAccount);
+
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "photo", "test.jpg", "image/jpeg", "test content".getBytes()
+        );
+
+        PhotoDto result = userPhotoService.updatePhoto(mockFile, freshAccount);
+
+        assertThat(result).isNull();
+    }
+
 }
