@@ -148,4 +148,26 @@ public class UserPhotoTests {
         assertThat(result.getId()).isEqualTo(testPhoto.getId());
         assertThat(result.getUploader()).isEqualTo("userwithphoto");
     }
+
+    @Test
+    @Order(7)
+    void testGetPhotoFailsWhenUserHasNoPhoto() {
+        AccountDto freshAccountDto = new AccountDto("nophotouser", "Password123!", "nophoto@example.com", Roles.USER.getRole());
+        Account freshAccount;
+        try {
+            freshAccount = accountService.createUser(freshAccountDto);
+            freshAccount.setStatus(Status.ACTIVE);
+            freshAccount.setCreatedAt(LocalDateTime.now());
+            freshAccount.setUpdatedAt(LocalDateTime.now());
+            accountRepository.save(freshAccount);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        Exception ex = assertThrows(ClientException.class, () -> {
+            userPhotoService.getPhoto(freshAccount);
+        });
+
+        assertThat(ex.getMessage()).isEqualTo("User has no photo");
+    }
 }
