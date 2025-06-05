@@ -153,4 +153,16 @@ public class StuffTests {
 
         assertEquals("Listing not found", exception.getMessage());
     }
+
+    @Test
+    @Order(4)
+    void testFlagListingSuccess() {
+        assertDoesNotThrow(() -> {
+            stuffService.flagListing(listingId);
+        });
+
+        Listing flaggedListing = listingRepository.findById(listingId).orElse(null);
+        assertNotNull(flaggedListing);
+        assertEquals(ListingStatus.UNDER_REVIEW, flaggedListing.getStatus());
+    }
 }
