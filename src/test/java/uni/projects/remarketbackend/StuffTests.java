@@ -290,4 +290,18 @@ public class StuffTests {
 
         assertEquals("Review not found", exception.getMessage());
     }
+
+    @Test
+    @Order(14)
+    void testDismissFlagReviewNotFlagged() {
+        Review review = reviewRepository.findById(reviewId).orElse(null);
+        review.setStatus(ReviewStatus.ACTIVE);
+        reviewRepository.save(review);
+
+        ClientException exception = assertThrows(ClientException.class, () -> {
+            stuffService.dismissFlagReview(reviewId);
+        });
+
+        assertEquals("Review is not flagged", exception.getMessage());
+    }
 }
