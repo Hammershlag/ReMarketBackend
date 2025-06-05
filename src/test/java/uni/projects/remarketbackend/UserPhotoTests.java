@@ -80,4 +80,18 @@ public class UserPhotoTests {
         assertThat(updatedAccount.getPhoto()).isNotNull();
         assertThat(updatedAccount.getPhoto().getId()).isEqualTo(result.getId());
     }
+
+    @Test
+    @Order(2)
+    void testUploadPhotoFailsWhenFileEmpty() {
+        MockMultipartFile emptyFile = new MockMultipartFile(
+                "photo", "test.jpg", "image/jpeg", new byte[0]
+        );
+
+        Exception ex = assertThrows(ClientException.class, () -> {
+            userPhotoService.uploadPhoto(emptyFile, testAccount);
+        });
+
+        assertThat(ex.getMessage()).isEqualTo("Photo file is empty");
+    }
 }
