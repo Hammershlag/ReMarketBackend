@@ -123,4 +123,18 @@ public class UserPhotoTests {
 
         assertThat(ex.getMessage()).isEqualTo("File is not an image");
     }
+
+    @Test
+    @Order(5)
+    void testUploadPhotoFailsWhenUserAlreadyHasPhoto() {
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "photo", "test.jpg", "image/jpeg", "test content".getBytes()
+        );
+
+        Exception ex = assertThrows(ClientException.class, () -> {
+            userPhotoService.uploadPhoto(mockFile, accountWithPhoto);
+        });
+
+        assertThat(ex.getMessage()).isEqualTo("User already has a photo");
+    }
 }
