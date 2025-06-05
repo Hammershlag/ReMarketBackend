@@ -234,4 +234,18 @@ public class StuffTests {
 
         assertEquals("Listing not found", exception.getMessage());
     }
+
+    @Test
+    @Order(10)
+    void testDismissFlagListingNotFlagged() {
+        Listing listing = listingRepository.findById(listingId).orElse(null);
+        listing.setStatus(ListingStatus.ACTIVE);
+        listingRepository.save(listing);
+
+        ClientException exception = assertThrows(ClientException.class, () -> {
+            stuffService.dismissFlagListing(listingId);
+        });
+
+        assertEquals("Listing is not flagged", exception.getMessage());
+    }
 }
