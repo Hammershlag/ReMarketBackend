@@ -332,4 +332,18 @@ public class StuffTests {
 
         assertEquals("Review not found", exception.getMessage());
     }
+
+    @Test
+    @Order(17)
+    void testFlagReviewAlreadyBlocked() {
+        Review review = reviewRepository.findById(reviewId).orElse(null);
+        review.setStatus(ReviewStatus.BLOCKED);
+        reviewRepository.save(review);
+
+        ClientException exception = assertThrows(ClientException.class, () -> {
+            stuffService.flagReview(reviewId);
+        });
+
+        assertEquals("Review is already blocked", exception.getMessage());
+    }
 }
