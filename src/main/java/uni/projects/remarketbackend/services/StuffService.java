@@ -60,7 +60,7 @@ public class StuffService {
 
         if (categoryId.isPresent()) {
             spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("categoryId"), categoryId.get()));
+                    criteriaBuilder.equal(root.get("category").get("id"), categoryId.get()));
         }
 
         if (title.isPresent()) {
