@@ -177,4 +177,18 @@ public class StuffTests {
 
         assertEquals("Listing not found", exception.getMessage());
     }
+
+    @Test
+    @Order(6)
+    void testFlagListingAlreadyBlocked() {
+        Listing listing = listingRepository.findById(listingId).orElse(null);
+        listing.setStatus(ListingStatus.BLOCKED);
+        listingRepository.save(listing);
+
+        ClientException exception = assertThrows(ClientException.class, () -> {
+            stuffService.flagListing(listingId);
+        });
+
+        assertEquals("Listing is already blocked", exception.getMessage());
+    }
 }
