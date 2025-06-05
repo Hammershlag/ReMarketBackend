@@ -271,4 +271,18 @@ public class UserPhotoTests {
         assertThat(ex.getMessage()).isEqualTo("Photo file size exceeds the limit of 5MB");
     }
 
+    @Test
+    @Order(13)
+    void testUpdatePhotoFailsWhenNotImage() {
+        MockMultipartFile textFile = new MockMultipartFile(
+                "photo", "test.txt", "text/plain", "test content".getBytes()
+        );
+
+        Exception ex = assertThrows(ClientException.class, () -> {
+            userPhotoService.updatePhoto(textFile, accountWithPhoto);
+        });
+
+        assertThat(ex.getMessage()).isEqualTo("File is not an image");
+    }
+
 }
