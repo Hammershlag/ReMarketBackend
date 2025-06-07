@@ -15,6 +15,7 @@ import uni.projects.remarketbackend.models.ShoppingCart;
 import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.models.listing.Listing;
 import uni.projects.remarketbackend.models.order.Address;
+import uni.projects.remarketbackend.models.order.ListingOrder;
 import uni.projects.remarketbackend.models.order.Order;
 import uni.projects.remarketbackend.models.order.OrderStatus;
 import uni.projects.remarketbackend.models.order.payment.Payment;
@@ -105,7 +106,7 @@ public class ShoppingCartService {
         order.setAddress(address);
         order.setShippingMethod(orderDto.getShippingMethod());
         order.setBuyer(account);
-        order.setListings(shoppingCart.getListings());
+        order.setListings(shoppingCart.getListings().stream().map(ListingOrder::new).toList());
 
         Payment payment = new Payment();
         payment.setTotal(shoppingCart.getListings().stream().mapToDouble(Listing::getPrice).sum());

@@ -34,8 +34,8 @@ public class OrderDto {
     @Schema(description = "Payment details associated with the order")
     private PaymentDto payment;
 
-    @Schema(description = "List of listing IDs included in the order", example = "[101, 102, 103]")
-    private List<Long> listingIds;
+    @Schema(description = "List of listings included in the order")
+    private List<ListingOrderDto> listingOrders;
 
     @Schema(description = "Status of the order", example = "SHIPPING")
     private OrderStatus orderStatus;
@@ -52,7 +52,7 @@ public class OrderDto {
                 AddressDto.valueFrom(order.getAddress()),
                 order.getBuyer().getId(),
                 PaymentDto.valueFrom(order.getPayment()),
-                order.getListings().stream().map(listing -> listing.getId()).toList(),
+                order.getListings().stream().map(ListingOrderDto::valueFrom).toList(),
                 order.getOrderStatus(),
                 order.getShippedDate(),
                 order.getShippingMethod()
@@ -67,6 +67,7 @@ public class OrderDto {
         order.setOrderStatus(this.orderStatus);
         order.setShippedDate(shippedDate);
         order.setShippingMethod(this.shippingMethod);
+        // Listy zamówionych produktów będą dodawane osobno, ponieważ wymagają referencji do pełnych obiektów Listing
         return order;
     }
 }

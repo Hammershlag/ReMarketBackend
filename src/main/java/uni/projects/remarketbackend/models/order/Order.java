@@ -47,7 +47,7 @@ public class Order {
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "item_id")
     )
-    private List<Listing> listings;
+    private List<ListingOrder> listings;
 
     @Column(name = "order_status", nullable = false)
     @Enumerated(EnumType.STRING)

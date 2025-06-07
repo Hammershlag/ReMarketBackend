@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uni.projects.remarketbackend.models.account.Account;
 import uni.projects.remarketbackend.models.listing.Listing;
+import uni.projects.remarketbackend.models.order.ListingOrder;
 import uni.projects.remarketbackend.models.order.Order;
 import uni.projects.remarketbackend.models.order.payment.Currency;
 
@@ -58,7 +59,8 @@ public class StripeService {
         String paymentCurrency = order.getPayment().getCurrency().name().toLowerCase();
 
         // Add each listing as a separate line item
-        for (Listing listing : order.getListings()) {
+        for (ListingOrder listingOrder : order.getListings()) {
+            Listing listing = listingOrder.getListing();
             SessionCreateParams.LineItem.PriceData.ProductData.Builder productBuilder =
                     SessionCreateParams.LineItem.PriceData.ProductData.builder()
                             .setName(listing.getTitle())
