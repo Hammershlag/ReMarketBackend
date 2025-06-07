@@ -15,6 +15,7 @@ import uni.projects.remarketbackend.models.order.ListingOrder;
 import uni.projects.remarketbackend.models.order.Order;
 import uni.projects.remarketbackend.models.order.OrderStatus;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -69,5 +70,21 @@ public class SellerService {
         listingOrder.setListingStatus(OrderStatus.SHIPPED);
         listingOrderRepository.save(listingOrder);
 
+        List<Order> orders = orderRepository.findAll()
+                .stream()
+                .filter(o -> o.getListings().contains(listingOrder))
+                .toList();
+
+        if (!orders.isEmpty()) {
+            Order order = orders.getFirst();
+            boolean allShipped = order.getListings().stream()
+                    .allMatch(item -> OrderStatus.SHIPPED.equals(item.getListingStatus()));
+
+            if (allShipped) {
+                order.setOrderStatus(OrderStatus.SHIPPED);
+                order.setShippedDate(LocalDateTime.now());
+                orderRepository.save(order);
+            }
+        }
     }
 }
