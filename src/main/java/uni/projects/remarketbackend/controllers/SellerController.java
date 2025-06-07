@@ -27,12 +27,13 @@ public class SellerController {
     private SellerService sellerService;
 
     @GetMapping("/orders")
+    @Transactional
     public ResponseEntity<List<OrderDto>> getItems(HttpServletRequest request) {
         List<OrderDto> orders = sellerService.getOrdersForSeller(request);
         return ResponseEntity.ok(orders);
     }
 
-    @PatchMapping("/orders/{listingOrderId}/status")
+    @PutMapping("/orders/{listingOrderId}/status")
     @Transactional
     public ResponseEntity<Void> updateListingOrderStatus(@PathVariable Long listingOrderId, HttpServletRequest request) {
         sellerService.setListingOrderStatusShipped(listingOrderId, request);

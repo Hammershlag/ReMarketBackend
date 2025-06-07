@@ -64,6 +64,7 @@ public class SecurityConfig {
 
                     // Listing photo endpoints
                     authorize.requestMatchers(HttpMethod.POST, "/api/photo/listing").hasAnyRole("SELLER", "ADMIN", "STUFF");
+                    authorize.requestMatchers(HttpMethod.POST, "/api/seller/**").hasAnyRole("SELLER", "ADMIN", "STUFF");
                     authorize.requestMatchers(HttpMethod.GET, "/api/photo/listing/**").permitAll();
 
 

@@ -39,18 +39,21 @@ public class SellerService {
 
     public List<OrderDto> getOrdersForSeller(HttpServletRequest request) {
         Account account = accountService.getAccount(request);
-//        List<Order> orders = orderRepository.findOrdersBySellerId(sellerId);
-//        return orders.stream()
-//                .map(order -> {
-//                    // Filter listings to include only those belonging to the seller
-//                    List<Listing> filteredListings = order.getListings().stream()
-//                            .filter(listing -> listing.getSeller().getId().equals(sellerId))
-//                            .collect(Collectors.toList());
-//                    order.setListings(filteredListings);
-//                    return OrderDto.fromOrder(order);
-//                })
-//                .collect(Collectors.toList());
-        return null;
+        if (account == null) {
+            throw new IllegalArgumentException("User not authenticated");
+        }
+
+        List<Order> orders = orderRepository.findOrdersContainingSellerItems(account.getId());
+
+        return orders.stream()
+                .map(order -> {
+                    OrderDto orderDto = OrderDto.valueFrom(order);
+                    orderDto.setListingOrders(orderDto.getListingOrders().stream()
+                            .filter(listingOrderDto -> listingOrderDto.getListing().getSellerUsername().equals(account.getUsername()))
+                            .collect(Collectors.toList()));
+                    return orderDto;
+                })
+                .collect(Collectors.toList());
     }
 
     @Transactional
