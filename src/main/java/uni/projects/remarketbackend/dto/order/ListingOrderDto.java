@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uni.projects.remarketbackend.dto.ListingDto;
 import uni.projects.remarketbackend.models.order.ListingOrder;
 import uni.projects.remarketbackend.models.order.OrderStatus;
 
@@ -24,14 +25,14 @@ public class ListingOrderDto {
     @Schema(description = "Status of the listing in the order", example = "SHIPPING")
     private OrderStatus listingStatus;
 
-    @Schema(description = "Listing ID", example = "42")
-    private Long listingId;
+    @Schema(description = "Complete listing information")
+    private ListingDto listing;
 
     public static ListingOrderDto valueFrom(ListingOrder listingOrder) {
         return new ListingOrderDto(
                 listingOrder.getId(),
                 listingOrder.getListingStatus(),
-                listingOrder.getListing().getId()
+                ListingDto.valueFrom(listingOrder.getListing())
         );
     }
 }
