@@ -1,11 +1,14 @@
 package uni.projects.remarketbackend.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uni.projects.remarketbackend.dto.ListingDto;
+import uni.projects.remarketbackend.dto.order.OrderDto;
+import uni.projects.remarketbackend.models.listing.ListingStatus;
+import uni.projects.remarketbackend.models.order.OrderStatus;
 import uni.projects.remarketbackend.services.SellerService;
 
 import java.util.List;
@@ -23,11 +26,16 @@ public class SellerController {
     @Autowired
     private SellerService sellerService;
 
-    @GetMapping("/items")
-    public ResponseEntity<List<ListingDto>> getItems() {
-        return null;
+    @GetMapping("/orders")
+    public ResponseEntity<List<OrderDto>> getItems(HttpServletRequest request) {
+        List<OrderDto> orders = sellerService.getOrdersForSeller(request);
+        return ResponseEntity.ok(orders);
     }
 
-
-
+    @PatchMapping("/orders/{listingOrderId}/status")
+    @Transactional
+    public ResponseEntity<Void> updateListingOrderStatus(@PathVariable Long listingOrderId, HttpServletRequest request) {
+        sellerService.setListingOrderStatusShipped(listingOrderId, request);
+        return ResponseEntity.noContent().build();
+    }
 }
